@@ -262,21 +262,168 @@
       font-size: 12px; color: var(--text-tertiary);
     }
 
+    /* IPE explainer card */
+    .explainer-card {
+      background: var(--bg);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      margin-bottom: 1.25rem;
+      overflow: hidden;
+    }
+    .explainer-header {
+      padding: 11px 14px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: space-between; gap: 10px;
+      transition: background .15s;
+    }
+    .explainer-header:hover { background: var(--bg-secondary); }
+    .explainer-header-left { display: flex; align-items: center; gap: 10px; }
+    .explainer-icon {
+      width: 28px; height: 28px; border-radius: var(--radius-md);
+      background: #EEEDFE; color: #3C3489;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; flex-shrink: 0;
+    }
+    .explainer-title { font-size: 13px; font-weight: 500; color: var(--text-primary); }
+    .explainer-subtitle { font-size: 11px; color: var(--text-tertiary); margin-top: 1px; }
+    .explainer-toggle { font-size: 10px; color: var(--text-tertiary); transition: transform .2s; }
+    .explainer-toggle.open { transform: rotate(180deg); }
+    .explainer-body {
+      padding: 0 14px 14px;
+      border-top: 0.5px solid var(--border);
+    }
+    .explainer-section { margin-top: 12px; }
+    .explainer-section-title {
+      font-size: 10px; text-transform: uppercase; letter-spacing: .07em;
+      color: var(--text-tertiary); font-weight: 600; margin-bottom: 5px;
+    }
+    .explainer-text { font-size: 12.5px; color: var(--text-secondary); line-height: 1.7; }
+    .explainer-table {
+      width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 12px;
+    }
+    .explainer-table th {
+      text-align: left; font-size: 10px; text-transform: uppercase; letter-spacing: .06em;
+      color: var(--text-tertiary); font-weight: 600;
+      padding: 4px 8px; border-bottom: 0.5px solid var(--border);
+    }
+    .explainer-table td {
+      padding: 5px 8px; color: var(--text-secondary);
+      border-bottom: 0.5px solid var(--border); vertical-align: top;
+    }
+    .explainer-table tr:last-child td { border-bottom: none; }
+    .explainer-table td:first-child { color: var(--text-primary); font-weight: 500; white-space: nowrap; }
+
+    /* Sticky score bar */
+    .sticky-bar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: var(--bg);
+      border-bottom: 0.5px solid var(--border-md);
+      padding: 8px 1rem;
+      display: flex; align-items: center; justify-content: center;
+      transform: translateY(-100%);
+      transition: transform .25s ease;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    }
+    .sticky-bar.visible { transform: translateY(0); }
+    .sticky-inner {
+      max-width: 680px; width: 100%;
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    }
+    .sticky-left { display: flex; align-items: baseline; gap: 6px; }
+    .sticky-score { font-size: 20px; font-weight: 500; color: var(--text-primary); }
+    .sticky-max { font-size: 12px; color: var(--text-tertiary); }
+    .sticky-band {
+      font-size: 12px; font-weight: 500; color: var(--green-dark);
+      background: var(--green-bg); border: 0.5px solid var(--green-border);
+      border-radius: 20px; padding: 3px 10px;
+    }
+    .sticky-progress { display: flex; align-items: center; gap: 8px; }
+    .sticky-progress-track { width: 80px; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+    .sticky-progress-fill { height: 100%; border-radius: 2px; background: var(--green); transition: width .3s; }
+    .sticky-progress-label { font-size: 11px; color: var(--text-tertiary); }
+
     @media (max-width: 500px) {
       .level-grid { grid-template-columns: repeat(3, 1fr); }
       .summary-inner { flex-direction: column; }
       .band-ranges { text-align: left; }
       .factor-row-name { width: 120px; }
+      .sticky-progress { display: none; }
     }
   </style>
 </head>
 <body>
+
+<!-- Sticky score bar (appears on scroll) -->
+<div class="sticky-bar" id="stickyBar">
+  <div class="sticky-inner">
+    <div class="sticky-left">
+      <span class="sticky-score" id="stickyScore">0</span>
+      <span class="sticky-max" id="stickyMax">/ 486</span>
+      <span class="sticky-band" id="stickyBand" style="display:none"></span>
+    </div>
+    <div class="sticky-progress">
+      <div class="sticky-progress-track"><div class="sticky-progress-fill" id="stickyFill" style="width:0%"></div></div>
+      <span class="sticky-progress-label" id="stickyLabel">0 / 5 scored</span>
+    </div>
+  </div>
+</div>
+
 <div class="container">
 
   <div class="page-header">
     <div class="page-label">Swiggy · Job evaluation</div>
     <h1 class="page-title">Mercer IPE scorecard</h1>
     <p class="page-desc">Rate yourself on each of the five competencies. Select a band to see what's expected at that level and what shifts are needed to reach the next one.</p>
+  </div>
+
+  <!-- IPE explainer card -->
+  <div class="explainer-card" id="explainerCard">
+    <div class="explainer-header" onclick="toggleExplainer()">
+      <div class="explainer-header-left">
+        <div class="explainer-icon">?</div>
+        <div>
+          <div class="explainer-title">What is the IPE framework?</div>
+          <div class="explainer-subtitle">How JE points map to levels across industries</div>
+        </div>
+      </div>
+      <div class="explainer-toggle" id="explainerToggle">&#9650;</div>
+    </div>
+    <div class="explainer-body" id="explainerBody" style="display:none">
+
+      <div class="explainer-section">
+        <div class="explainer-section-title">Job Evaluation (JE) — the basics</div>
+        <p class="explainer-text">Job Evaluation is a structured methodology used by companies to size roles objectively — independent of who holds them. Rather than setting levels based on tenure or title, JE scores the role itself on measurable dimensions. The output is a number (JE points) that sits on a global scale, making roles comparable across functions, geographies, and even companies.</p>
+      </div>
+
+      <div class="explainer-section">
+        <div class="explainer-section-title">Mercer IPE — how it works</div>
+        <p class="explainer-text">Mercer's International Position Evaluation (IPE) is the most widely used JE methodology globally, covering 20,000+ organisations. It evaluates every role on five factors — Impact, Innovation (complexity), Communication, People, and Knowledge — each weighted by how much that dimension contributes to the role's overall value. The weighted sum becomes the IPE score.</p>
+      </div>
+
+      <div class="explainer-section">
+        <div class="explainer-section-title">How industry maps JE points to levels</div>
+        <p class="explainer-text">Each company anchors its internal grades to IPE point bands. These bands are calibrated against Mercer's global remuneration surveys so that a B7 at Swiggy is genuinely comparable to a similar-sized role at any other participating company — enabling market benchmarking for compensation.</p>
+        <table class="explainer-table">
+          <thead>
+            <tr><th>IPE range</th><th>Swiggy band</th><th>Typical role</th><th>What this signals</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>0 – 179</td><td>B6</td><td>Assistant Manager</td><td>Executes within a defined playbook; supervised delivery</td></tr>
+            <tr><td>180 – 219</td><td>B7</td><td>Manager</td><td>Plans own work; proactive stakeholder management; owns a charter</td></tr>
+            <tr><td>220 – 269</td><td>B8</td><td>Senior Manager</td><td>Manages multiple projects; cross-functional influence; team delivery</td></tr>
+            <tr><td>270 – 319</td><td>B9</td><td>General Manager</td><td>Owns strategic charters; high judgment; independent impact on BU goals</td></tr>
+            <tr><td>320 – 369</td><td>B10</td><td>Director</td><td>Owns sub-function end-to-end; sets execution standard; VP-level influence</td></tr>
+            <tr><td>370+</td><td>B11</td><td>AVP</td><td>Leads a function; shapes BU strategy; SVP-level influence; culture carrier</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="explainer-section">
+        <div class="explainer-section-title">Why it matters for promotion decisions</div>
+        <p class="explainer-text">JE scores make promotion conversations more objective. A promotion isn't just a title change — it's a claim that the role's scope, complexity, and accountability have permanently shifted upward across most dimensions. If your IPE score lands in the next band, it validates that the role has genuinely grown, not just the person's effort in the current one.</p>
+      </div>
+
+    </div>
   </div>
 
   <div id="summary"></div>
@@ -1013,6 +1160,7 @@ function render() {
   renderSummary();
   renderFactors();
   renderCTA();
+  updateStickyBar();
 }
 
 function toggleExpand(id) {
@@ -1031,6 +1179,43 @@ function resetAll() {
   if (radarChart) { radarChart.destroy(); radarChart = null; }
   render();
 }
+
+// Explainer toggle
+let explainerOpen = false;
+function toggleExplainer() {
+  explainerOpen = !explainerOpen;
+  document.getElementById('explainerBody').style.display = explainerOpen ? 'block' : 'none';
+  const tog = document.getElementById('explainerToggle');
+  tog.classList.toggle('open', explainerOpen);
+}
+
+// Sticky bar
+function updateStickyBar() {
+  const total = totalScore();
+  const completed = completedCount();
+  const max = maxScore();
+  document.getElementById('stickyScore').textContent = total;
+  document.getElementById('stickyMax').textContent = '/ ' + max;
+  const pct = Math.round((completed / FACTORS.length) * 100);
+  document.getElementById('stickyFill').style.width = pct + '%';
+  document.getElementById('stickyLabel').textContent = completed + ' / ' + FACTORS.length + ' scored';
+  const bandEl = document.getElementById('stickyBand');
+  if (completed === FACTORS.length) {
+    bandEl.textContent = getBand(total);
+    bandEl.style.display = 'inline-flex';
+  } else {
+    bandEl.style.display = 'none';
+  }
+}
+
+// Show sticky bar once user scrolls past the page header
+const summaryAnchor = document.getElementById('summary');
+const stickyBar = document.getElementById('stickyBar');
+const scrollObserver = new IntersectionObserver(
+  ([entry]) => { stickyBar.classList.toggle('visible', !entry.isIntersecting); },
+  { threshold: 0, rootMargin: '0px' }
+);
+scrollObserver.observe(document.querySelector('.page-header'));
 
 render();
 </script>
