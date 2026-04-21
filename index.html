@@ -85,16 +85,47 @@
     }
     .band-range-row.active { color: var(--green-dark); font-weight: 500; }
 
-    .progress-card {
-      background: var(--bg-secondary);
+    /* Summary card — always visible, collapsible */
+    .sc-header {
+      padding: 12px 14px;
+      cursor: pointer;
+      display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+      transition: background .15s;
       border-radius: var(--radius-lg);
-      padding: 1rem 1.25rem;
-      margin-bottom: 1rem;
     }
-    .progress-label { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--text-tertiary); margin-bottom: 6px; }
-    .progress-count { font-size: 15px; color: var(--text-primary); margin-bottom: 10px; }
-    .progress-track { height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; }
-    .progress-fill { height: 100%; border-radius: 3px; background: var(--green); transition: width .3s ease; }
+    .sc-header:hover { background: var(--bg-tertiary); }
+    .sc-score-block { display: flex; align-items: baseline; gap: 4px; flex-shrink: 0; }
+    .sc-score { font-size: 26px; font-weight: 500; color: var(--text-primary); line-height: 1; }
+    .sc-score-max { font-size: 13px; color: var(--text-tertiary); }
+    .sc-chips { display: flex; align-items: center; gap: 6px; flex: 1; flex-wrap: wrap; }
+    .sc-band-chip {
+      display: inline-flex; align-items: center;
+      background: var(--green-bg); border: 0.5px solid var(--green-border);
+      border-radius: 20px; padding: 3px 12px;
+      font-size: 12px; color: var(--green-dark); font-weight: 500;
+    }
+    .sc-next-chip {
+      display: inline-flex; align-items: center; gap: 4px;
+      background: var(--bg-tertiary); border: 0.5px solid var(--border-md);
+      border-radius: 20px; padding: 3px 10px;
+      font-size: 11px; color: var(--text-tertiary);
+    }
+    .sc-progress-wrap { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+    .sc-progress-track { width: 56px; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+    .sc-progress-fill { height: 100%; border-radius: 2px; background: var(--green); transition: width .3s; }
+    .sc-progress-label { font-size: 11px; color: var(--text-tertiary); white-space: nowrap; }
+    .sc-toggle { font-size: 10px; color: var(--text-tertiary); transition: transform .2s; margin-left: auto; flex-shrink: 0; }
+    .sc-toggle.open { transform: rotate(180deg); }
+
+    .sc-body { padding: 0 14px 14px; border-top: 0.5px solid var(--border); }
+    .sc-factor-row { display: flex; align-items: center; gap: 10px; margin-bottom: 7px; }
+    .sc-factor-name { font-size: 12px; color: var(--text-secondary); width: 160px; flex-shrink: 0; }
+    .sc-bar-bg { flex: 1; height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; }
+    .sc-bar-fill { height: 100%; border-radius: 3px; background: var(--green); transition: width .35s; }
+    .sc-bar-fill.unscored { background: transparent; }
+    .sc-bar-bg.unscored { background: repeating-linear-gradient(90deg, var(--border) 0, var(--border) 4px, transparent 4px, transparent 8px); }
+    .sc-factor-pts { font-size: 12px; color: var(--text-tertiary); width: 56px; text-align: right; flex-shrink: 0; }
+    .sc-factor-pts.unscored { color: var(--border-md); }
 
     .divider { height: 0.5px; background: var(--border); margin: 1rem 0; }
 
@@ -986,46 +1017,80 @@ function getBand(score) {
   return "Below B6";
 }
 
+let summaryOpen = true;
+function toggleSummary() {
+  summaryOpen = !summaryOpen;
+  renderSummary();
+}
+
+function nextBandInfo(score) {
+  for (let i = 0; i < BAND_RANGES.length - 1; i++) {
+    const b = BAND_RANGES[i];
+    if (score >= b.min && score <= b.max) {
+      return { needed: BAND_RANGES[i + 1].min - score, next: BAND_RANGES[i + 1].band };
+    }
+  }
+  return null;
+}
+
 function renderSummary() {
   const total = totalScore();
   const completed = completedCount();
+  const max = maxScore();
   const el = document.getElementById('summary');
 
-  if (completed === FACTORS.length) {
-    const bandLabel = getBand(total);
-    let rangeRows = BAND_RANGES.map(b => {
-      const active = bandLabel.startsWith(b.band.split(' ')[0]);
-      return `<div class="band-range-row${active?' active':''}">${b.band}: ${b.min}–${b.max===999?'486+':b.max}</div>`;
-    }).join('');
+  const bandLabel = completed > 0 ? getBand(total) : null;
+  const nextInfo = bandLabel ? nextBandInfo(total) : null;
+  const progPct = Math.round(completed / FACTORS.length * 100);
 
-    let factorRows = FACTORS.map(f => {
-      const sel = selections[f.id];
-      const pts = sel !== null ? f.levels[sel].pts : 0;
-      const pct = Math.round((pts / f.levels[5].pts) * 100);
-      return `<div class="factor-row">
-        <div class="factor-row-name">${f.name}</div>
-        <div class="mini-bar-bg"><div class="mini-bar-fill" style="width:${pct}%"></div></div>
-        <div class="factor-row-pts">${pts} / ${f.levels[5].pts}</div>
-      </div>`;
-    }).join('');
+  const bandChip = bandLabel
+    ? `<span class="sc-band-chip">${bandLabel}</span>`
+    : `<span class="sc-band-chip" style="background:var(--bg-tertiary);border-color:var(--border);color:var(--text-tertiary)">Not scored yet</span>`;
 
-    el.innerHTML = `<div class="summary-card">
-      <div class="summary-inner">
-        <div>
-          <div class="page-label">IPE total score</div>
-          <div class="ipe-total">${total} <span class="ipe-max">/ ${maxScore()}</span></div>
-          <div class="band-chip">${bandLabel}</div>
-        </div>
-        <div class="band-ranges">${rangeRows}</div>
-      </div>
-      <div class="divider"></div>
-      <div class="breakdown-label">Factor breakdown</div>
-      ${factorRows}
-      <div class="radar-wrap">
-        <canvas id="radarChart" role="img" aria-label="Radar chart showing percentage scores across five IPE factors"></canvas>
-      </div>
+  const nextChip = nextInfo
+    ? `<span class="sc-next-chip">+${nextInfo.needed} pts → ${nextInfo.next}</span>`
+    : (bandLabel && !nextInfo ? `<span class="sc-next-chip">Top band reached</span>` : '');
+
+  const factorRows = FACTORS.map(f => {
+    const sel = selections[f.id];
+    const scored = sel !== null;
+    const pts = scored ? f.levels[sel].pts : 0;
+    const pct = scored ? Math.round((pts / f.levels[5].pts) * 100) : 0;
+    return `<div class="sc-factor-row">
+      <div class="sc-factor-name">${f.name}</div>
+      <div class="sc-bar-bg${scored ? '' : ' unscored'}"><div class="sc-bar-fill${scored ? '' : ' unscored'}" style="width:${pct}%"></div></div>
+      <div class="sc-factor-pts${scored ? '' : ' unscored'}">${scored ? pts + ' / ' + f.levels[5].pts : '—'}</div>
     </div>`;
+  }).join('');
 
+  const radarSection = completed === FACTORS.length
+    ? `<div class="radar-wrap"><canvas id="radarChart" role="img" aria-label="Radar chart of IPE scores"></canvas></div>`
+    : `<div style="font-size:12px;color:var(--text-tertiary);font-style:italic;padding:8px 0">Radar chart appears when all 5 competencies are scored.</div>`;
+
+  el.innerHTML = `<div class="summary-card" style="padding:0">
+    <div class="sc-header" onclick="toggleSummary()">
+      <div class="sc-score-block">
+        <span class="sc-score">${total}</span>
+        <span class="sc-score-max">/ ${max} pts</span>
+      </div>
+      <div class="sc-chips">
+        ${bandChip}
+        ${nextChip}
+      </div>
+      <div class="sc-progress-wrap">
+        <div class="sc-progress-track"><div class="sc-progress-fill" style="width:${progPct}%"></div></div>
+        <span class="sc-progress-label">${completed}/${FACTORS.length}</span>
+      </div>
+      <span class="sc-toggle${summaryOpen ? ' open' : ''}">&#9650;</span>
+    </div>
+    ${summaryOpen ? `<div class="sc-body">
+      <div class="breakdown-label" style="margin-top:4px;margin-bottom:8px">Factor breakdown</div>
+      ${factorRows}
+      ${radarSection}
+    </div>` : ''}
+  </div>`;
+
+  if (summaryOpen && completed === FACTORS.length) {
     setTimeout(() => {
       const ctx = document.getElementById('radarChart');
       if (!ctx) return;
@@ -1035,39 +1100,31 @@ function renderSummary() {
         return sel !== null ? Math.round((f.levels[sel].pts / f.levels[5].pts) * 100) : 0;
       });
       radarChart = new Chart(ctx, {
-        type:'radar',
-        data:{
+        type: 'radar',
+        data: {
           labels: FACTORS.map(f => f.name),
-          datasets:[{
-            label:'Score (%)',
+          datasets: [{
+            label: 'Score (%)',
             data,
-            borderColor:'#1D9E75',
-            backgroundColor:'rgba(29,158,117,0.10)',
-            pointBackgroundColor:'#1D9E75',
-            pointRadius:5,
-            borderWidth:1.5
+            borderColor: '#1D9E75',
+            backgroundColor: 'rgba(29,158,117,0.10)',
+            pointBackgroundColor: '#1D9E75',
+            pointRadius: 5,
+            borderWidth: 1.5
           }]
         },
-        options:{
-          responsive:true, maintainAspectRatio:false,
-          plugins:{legend:{display:false}},
-          scales:{r:{
-            min:0, max:100,
-            ticks:{display:false},
-            grid:{color:'rgba(136,135,128,0.15)'},
-            pointLabels:{font:{size:11}}
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: { r: {
+            min: 0, max: 100,
+            ticks: { display: false },
+            grid: { color: 'rgba(136,135,128,0.15)' },
+            pointLabels: { font: { size: 11 } }
           }}
         }
       });
     }, 50);
-
-  } else {
-    const pct = Math.round(completed / FACTORS.length * 100);
-    el.innerHTML = `<div class="progress-card">
-      <div class="progress-label">Progress</div>
-      <div class="progress-count">${completed} of ${FACTORS.length} competencies scored</div>
-      <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
-    </div>`;
   }
 }
 
