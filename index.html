@@ -148,6 +148,14 @@
       padding: 0 14px 14px;
       border-top: 0.5px solid var(--border);
     }
+
+    .factor-definition {
+      font-size: 12.5px; color: var(--text-secondary);
+      line-height: 1.65; padding: 10px 0 2px;
+      border-bottom: 0.5px solid var(--border);
+      margin-bottom: 2px;
+    }
+
     .level-grid {
       display: grid; grid-template-columns: repeat(6, 1fr);
       gap: 5px; margin: 12px 0 10px;
@@ -166,13 +174,66 @@
     .level-btn:hover { border-color: var(--green); color: var(--green-dark); background: var(--green-bg); }
     .level-btn.active { border-color: var(--green); background: var(--green-bg); color: var(--green-dark); font-weight: 500; }
 
-    .level-desc {
-      font-size: 12px; color: var(--text-secondary);
-      line-height: 1.6; min-height: 40px; padding: 6px 0;
-    }
-    .level-desc.empty { color: var(--text-tertiary); font-style: italic; }
+    /* Guidance panel */
+    .guidance-panel { margin-top: 4px; }
+    .guidance-section { margin-bottom: 10px; }
 
-    .score-bar-wrap { margin-top: 10px; }
+    .guidance-label {
+      font-size: 10px; text-transform: uppercase; letter-spacing: .07em;
+      color: var(--text-tertiary); margin-bottom: 6px; font-weight: 500;
+    }
+    .guidance-bullets {
+      list-style: none; padding: 0;
+      background: var(--bg-secondary);
+      border-radius: var(--radius-md);
+      padding: 8px 12px;
+    }
+    .guidance-bullets li {
+      font-size: 12.5px; color: var(--text-secondary);
+      padding: 3px 0 3px 16px; position: relative; line-height: 1.55;
+    }
+    .guidance-bullets li::before {
+      content: '–'; position: absolute; left: 0; color: var(--text-tertiary);
+    }
+
+    .shift-box {
+      background: var(--green-bg);
+      border-left: 2px solid var(--green-border);
+      padding: 10px 12px;
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+      margin-top: 8px;
+    }
+    .shift-label {
+      font-size: 10px; text-transform: uppercase; letter-spacing: .07em;
+      color: var(--green-dark); margin-bottom: 5px; font-weight: 600;
+    }
+    .shift-text {
+      font-size: 12.5px; color: var(--green-text); line-height: 1.65;
+      font-style: italic;
+    }
+    .next-bullets {
+      list-style: none; padding: 0; margin-top: 8px;
+    }
+    .next-bullets li {
+      font-size: 12px; color: var(--green-text);
+      padding: 2px 0 2px 18px; position: relative; line-height: 1.5;
+    }
+    .next-bullets li::before {
+      content: '→'; position: absolute; left: 0;
+      color: var(--green); font-size: 11px; line-height: 1.5;
+    }
+
+    .top-level-note {
+      font-size: 12px; color: var(--text-tertiary);
+      font-style: italic; padding: 8px 0;
+    }
+
+    .empty-guidance {
+      font-size: 12px; color: var(--text-tertiary);
+      font-style: italic; padding: 10px 0;
+    }
+
+    .score-bar-wrap { margin-top: 12px; }
     .score-bar-bg { height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
     .score-bar-fill { height: 100%; border-radius: 2px; background: var(--green); transition: width .35s ease; }
     .score-bar-labels {
@@ -182,25 +243,17 @@
 
     .cta-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 1.5rem; }
     .btn-primary {
-      padding: 10px 22px;
-      border: none;
-      border-radius: var(--radius-md);
-      background: var(--green);
-      color: white;
-      font-size: 14px; cursor: pointer;
-      font-family: inherit; font-weight: 500;
+      padding: 10px 22px; border: none; border-radius: var(--radius-md);
+      background: var(--green); color: white;
+      font-size: 14px; cursor: pointer; font-family: inherit; font-weight: 500;
       transition: opacity .15s;
     }
     .btn-primary:hover { opacity: .88; }
     .btn-sec {
-      padding: 10px 18px;
-      border: 0.5px solid var(--border-md);
-      border-radius: var(--radius-md);
-      background: transparent;
-      color: var(--text-secondary);
-      font-size: 14px; cursor: pointer;
-      font-family: inherit;
-      transition: background .15s;
+      padding: 10px 18px; border: 0.5px solid var(--border-md);
+      border-radius: var(--radius-md); background: transparent;
+      color: var(--text-secondary); font-size: 14px; cursor: pointer;
+      font-family: inherit; transition: background .15s;
     }
     .btn-sec:hover { background: var(--bg-secondary); }
 
@@ -223,7 +276,7 @@
   <div class="page-header">
     <div class="page-label">Swiggy · Job evaluation</div>
     <h1 class="page-title">Mercer IPE scorecard</h1>
-    <p class="page-desc">Rate yourself on each of the five factors below. Scores map to Swiggy's levelling framework (B6–B11) using the Mercer IPE methodology.</p>
+    <p class="page-desc">Rate yourself on each of the five competencies. Select a band to see what's expected at that level and what shifts are needed to reach the next one.</p>
   </div>
 
   <div id="summary"></div>
@@ -236,78 +289,527 @@
 <script>
 const FACTORS = [
   {
-    id:"impact", name:"Impact & accountability",
-    mercer:"Impact", weight:25,
-    swiggy:"Scope of role · Autonomy",
-    iconBg:"#E1F5EE", iconColor:"#085041",
-    pillBg:"#E1F5EE", pillColor:"#085041",
-    levels:[
-      {band:"B6", pts:40, label:"Executes tasks in sub-function; routine supervision; predictable outcomes"},
-      {band:"B7", pts:52, label:"Plans & executes charter goals; broad supervision; accountable for specific outcomes"},
-      {band:"B8", pts:66, label:"Manages multiple projects; directional supervision; impacts revenues/cost/efficiency"},
-      {band:"B9", pts:82, label:"Owns strategic charters; limited guidance; directly impacts BU/CF AOP goals"},
-      {band:"B10",pts:100,label:"Owns sub-function end-to-end; independent; sets execution standard across the org"},
-      {band:"B11",pts:120,label:"Leads function; shapes BU strategy; full ownership of functional P&L and direction"}
+    id: "impact",
+    name: "Impact & accountability",
+    mercer: "Impact",
+    weight: 25,
+    swiggy: "Scope of role · Autonomy",
+    definition: "How broadly you own problems, how independently you act, and whether you deliver outcomes vs just tasks. This competency asks: are you executing what's handed to you, or are you defining what needs to be done?",
+    iconBg: "#E1F5EE", iconColor: "#085041",
+    pillBg: "#E1F5EE", pillColor: "#085041",
+    levels: [
+      {
+        band: "B6", pts: 40,
+        label: "Executes tasks in sub-function; routine supervision; predictable outcomes",
+        behaviors: [
+          "Executes from a given playbook",
+          "Understands metrics in own area",
+          "Follows SOPs; meets quality and timelines",
+          "Identifies snags and asks for help",
+          "Escalates problems rather than solving independently"
+        ],
+        shift: "From following direction to generating direction. At AM, the problem and method are handed to you. At Manager, you are expected to notice problems yourself and propose how to fix them — without being asked.",
+        nextBehaviors: [
+          "Tracks metrics and spots new problems",
+          "Proposes changes to SOPs",
+          "Creates plans with estimated resources and contingencies",
+          "Keeps stakeholders updated proactively"
+        ]
+      },
+      {
+        band: "B7", pts: 52,
+        label: "Plans & executes charter goals; broad supervision; accountable for specific outcomes",
+        behaviors: [
+          "Tracks metrics and spots new problems",
+          "Proposes changes to SOPs",
+          "Creates plans with estimated resources and contingencies",
+          "Monitors progress through dashboards and check-ins",
+          "Keeps stakeholders updated proactively"
+        ],
+        shift: "From completing tasks to planning and managing delivery. AM executes what is scoped. Manager scopes the work, estimates what it needs, and owns the rhythm of delivery. The jump to Senior Manager means raising the bar for a whole team's output — rewriting the playbook when it's broken.",
+        nextBehaviors: [
+          "Independently breaks down problems using business insights and user data",
+          "Creates and reviews team plans with timely decisions",
+          "Revises SOPs and playbooks",
+          "Highlights execution gaps and escalates with urgency"
+        ]
+      },
+      {
+        band: "B8", pts: 66,
+        label: "Manages multiple projects; directional supervision; impacts revenues/cost/efficiency",
+        behaviors: [
+          "Independently breaks down problems using business insights and user data",
+          "Aware of key competitors and Swiggy's USP",
+          "Creates and reviews team plans with timely decisions",
+          "Revises SOPs and playbooks",
+          "Highlights execution gaps and escalates with urgency"
+        ],
+        shift: "From managing execution quality to owning outcomes completely. Senior Manager improves how things run. GM is accountable for whether the charter delivers — and does not wait for follow-up from above to fix what's slipping.",
+        nextBehaviors: [
+          "Owns performance outcomes end-to-end",
+          "Guides teams proactively — minimal follow-up needed",
+          "Drives accountability across all stakeholders"
+        ]
+      },
+      {
+        band: "B9", pts: 82,
+        label: "Owns strategic charters; limited guidance; directly impacts BU/CF AOP goals",
+        behaviors: [
+          "Infers patterns and root causes from varied data; high judgment",
+          "Defines and prioritises problems — right a lot, even with incomplete data",
+          "Owns performance outcomes end-to-end",
+          "Guides teams proactively — minimal follow-up needed",
+          "Drives accountability across all stakeholders"
+        ],
+        shift: "From owning a charter's execution to owning its direction. GM executes against a strategy set with leadership input. Director independently decides the roadmap — anticipating how every move affects adjacent teams, planning 6+ months out.",
+        nextBehaviors: [
+          "Independently creates and changes roadmap with full inter-dependency view",
+          "Puts right systems and processes in place to optimise speed, quality, cost",
+          "Sets the execution standard; evolves governance mechanisms"
+        ]
+      },
+      {
+        band: "B10", pts: 100,
+        label: "Owns sub-function end-to-end; independent; sets execution standard across the org",
+        behaviors: [
+          "Independently creates and changes roadmap with full inter-dependency view",
+          "Puts right systems and processes in place to optimise speed, quality, cost",
+          "Makes right trade-off between quick fix and sustainable solution",
+          "Sets the execution standard; evolves governance mechanisms",
+          "Drives accountability across all stakeholders; leverages technology"
+        ],
+        shift: "From owning a sub-function's roadmap to setting the function's annual strategy. Director thinks deeply within their domain. AVP zooms out to the entire BU, connects how every sub-function interacts, and owns the strategy that ties it all together.",
+        nextBehaviors: [
+          "Connects dots across the BU to arrive at annual function strategy",
+          "Clarifies goals and success metrics across departments",
+          "Identifies and avoids execution derailers ahead of time",
+          "Modifies goals and takes stretch targets independently; shows complete ownership"
+        ]
+      },
+      {
+        band: "B11", pts: 120,
+        label: "Leads function; shapes BU strategy; full ownership of functional P&L and direction",
+        behaviors: [
+          "Connects dots across the BU to arrive at annual function strategy",
+          "Preempts interaction effects of own projects on other functions",
+          "Clarifies goals and success metrics across departments",
+          "Identifies and avoids execution derailers ahead of time",
+          "Modifies goals and takes stretch targets independently; shows complete ownership"
+        ],
+        shift: null
+      }
     ]
   },
   {
-    id:"complexity", name:"Problem-solving & complexity",
-    mercer:"Innovation", weight:20,
-    swiggy:"Business understanding · Strategic thinking",
-    iconBg:"#EEEDFE", iconColor:"#3C3489",
-    pillBg:"#EEEDFE", pillColor:"#3C3489",
-    levels:[
-      {band:"B6", pts:32, label:"Routine, defined problems; low ambiguity; escalates rather than solves"},
-      {band:"B7", pts:42, label:"Defined, non-routine problems; proposes solutions within own area"},
-      {band:"B8", pts:54, label:"Varied, non-routine; independently decomposes using data and user insight"},
-      {band:"B9", pts:68, label:"High ambiguity; defines & prioritises problems; right a lot with incomplete data"},
-      {band:"B10",pts:82, label:"Very high ambiguity; creates roadmap with full inter-dependency view; 6+ month horizon"},
-      {band:"B11",pts:100,label:"Extreme ambiguity; derives problems from BU strategy; long-term BU implications"}
+    id: "complexity",
+    name: "Problem-solving & complexity",
+    mercer: "Innovation",
+    weight: 20,
+    swiggy: "Business understanding · Strategic thinking",
+    definition: "How independently you identify what needs solving, how creative and novel your solutions are, and whether you drive change or just participate in it. The question is: do you wait for a problem to land on your desk, or do you go looking for it?",
+    iconBg: "#EEEDFE", iconColor: "#3C3489",
+    pillBg: "#EEEDFE", pillColor: "#3C3489",
+    levels: [
+      {
+        band: "B6", pts: 32,
+        label: "Routine, defined problems; low ambiguity; escalates rather than solves",
+        behaviors: [
+          "Shares ideas in brainstorms",
+          "Converts ideas to solutions with guidance",
+          "Works on routine, well-defined problems",
+          "Escalates to manager when stuck rather than proposing a solution"
+        ],
+        shift: "From contributing ideas to owning improvements. AM participates when others create the forum. Manager independently spots what could be better and drives the change — without needing to be asked.",
+        nextBehaviors: [
+          "Suggests better ways to do things in own area",
+          "Comes up with customised, creative solutions",
+          "Proposes solutions to defined, non-routine problems"
+        ]
+      },
+      {
+        band: "B7", pts: 42,
+        label: "Defined, non-routine problems; proposes solutions within own area",
+        behaviors: [
+          "Suggests better ways to do things in own area",
+          "Comes up with customised, creative solutions",
+          "Handles defined, non-routine problems independently",
+          "Proposes process improvements without being asked"
+        ],
+        shift: "From fixing what's in front of you to learning from outside and bringing it in. Manager solves with what they know. Senior Manager scans the industry, experiments with new approaches, and shares the learning — even when it fails.",
+        nextBehaviors: [
+          "Suggests process improvements drawing from industry best practices",
+          "Experiments, fails fast, and shares learnings openly",
+          "Brings new structural approaches to ongoing challenges"
+        ]
+      },
+      {
+        band: "B8", pts: 54,
+        label: "Varied, non-routine; independently decomposes using data and user insight",
+        behaviors: [
+          "Suggests process improvements drawing from industry best practices",
+          "Experiments, fails fast, and shares learnings openly",
+          "Brings new structural approaches to ongoing challenges",
+          "Decomposes varied, non-routine problems independently"
+        ],
+        shift: "From experimenting within your charter to questioning whether the charter itself is right. Senior Manager innovates within the frame. GM challenges the frame — asking if the current way of working is even the right one.",
+        nextBehaviors: [
+          "Continuously relooks at team processes against external benchmarks",
+          "Maximises impact with minimal resources (DMWL mindset)",
+          "Identifies trajectory-changing opportunities; challenges the status quo"
+        ]
+      },
+      {
+        band: "B9", pts: 68,
+        label: "High ambiguity; defines & prioritises problems; right a lot with incomplete data",
+        behaviors: [
+          "Continuously relooks at team processes against external benchmarks",
+          "Maximises own impact with minimal resources (DMWL mindset)",
+          "Identifies trajectory-changing opportunities; challenges the status quo",
+          "Makes high-judgment calls on ambiguous, high-stakes problems"
+        ],
+        shift: "From personally driving innovation to building a culture of it. GM is the source of new ideas. Director creates conditions where the whole team generates ideas — and knows how to filter which ones are worth scaling.",
+        nextBehaviors: [
+          "Proactively drives and nudges others on continuous improvement",
+          "Fosters an innovation ecosystem — team actively shares ideas",
+          "Guides ideas through cost, replicability, and scalability filters"
+        ]
+      },
+      {
+        band: "B10", pts: 82,
+        label: "Very high ambiguity; creates roadmap with full inter-dependency view; 6+ month horizon",
+        behaviors: [
+          "Proactively drives and nudges others on continuous improvement",
+          "Fosters an innovation ecosystem — team actively shares ideas",
+          "Guides ideas through cost, replicability, and scalability filters",
+          "Independently creates and changes roadmap with full inter-dependency view"
+        ],
+        shift: "From fostering innovation within the function to redefining what the function could be. Director pushes the team to improve what exists. AVP questions whether the existing model is right — drawing from outside the industry to imagine fundamentally different possibilities.",
+        nextBehaviors: [
+          "Applies beginner's mindset — questions existing notions and assumptions",
+          "Brings outside-in perspectives from unrelated fields",
+          "Advocates unprecedented, futuristic approaches in products, processes, business models"
+        ]
+      },
+      {
+        band: "B11", pts: 100,
+        label: "Extreme ambiguity; derives problems from BU strategy; long-term BU implications",
+        behaviors: [
+          "Applies beginner's mindset — questions existing notions and assumptions",
+          "Thinks outside swim lane; brings outside-in perspectives from unrelated fields",
+          "Advocates unprecedented, futuristic approach in products, processes, business models",
+          "Questions whether the current way of working is even the right one at a BU level"
+        ],
+        shift: null
+      }
     ]
   },
   {
-    id:"communication", name:"Communication & influence",
-    mercer:"Communication", weight:20,
-    swiggy:"Stakeholder management · Influence",
-    iconBg:"#FAECE7", iconColor:"#712B13",
-    pillBg:"#FAECE7", pillColor:"#712B13",
-    levels:[
-      {band:"B6", pts:30, label:"Shares info with peers; respectful; expresses views when asked"},
-      {band:"B7", pts:40, label:"Proactive stakeholder updates; surfaces data-backed insights; voices disagreement"},
-      {band:"B8", pts:52, label:"Builds credibility via dialogue; influences cross-functionally with some support"},
-      {band:"B9", pts:64, label:"Fully independent internal & cross-functional influence; walks in with credibility"},
-      {band:"B10",pts:78, label:"Influences VP-level leaders independently; mentors team on conflict resolution"},
-      {band:"B11",pts:94, label:"Influences SVPs & external parties; crafts narratives for senior leadership forums"}
+    id: "communication",
+    name: "Communication & influence",
+    mercer: "Communication",
+    weight: 20,
+    swiggy: "Stakeholder management · Influence",
+    definition: "How proactively you communicate, how wide your influence is, and whether you can move people who aren't in your direct chain. This tracks from responding when asked → proactive updates → changing minds → influencing leaders independently.",
+    iconBg: "#FAECE7", iconColor: "#712B13",
+    pillBg: "#FAECE7", pillColor: "#712B13",
+    levels: [
+      {
+        band: "B6", pts: 30,
+        label: "Shares info with peers; respectful; expresses views when asked",
+        behaviors: [
+          "Shares relevant info with peers",
+          "Respectful in conflict",
+          "Expresses own views and asks questions when prompted",
+          "Responds when asked; does not proactively push information"
+        ],
+        shift: "From reactive sharing to proactive stakeholder management. AM responds when asked. Manager anticipates what stakeholders need to know and surfaces it with data — without being prompted.",
+        nextBehaviors: [
+          "Regular comms with stakeholders with minimal guidance",
+          "Voices disagreement and commits when persuaded",
+          "Surfaces data-backed insights proactively"
+        ]
+      },
+      {
+        band: "B7", pts: 40,
+        label: "Proactive stakeholder updates; surfaces data-backed insights; voices disagreement",
+        behaviors: [
+          "Regular comms with stakeholders with minimal guidance",
+          "Voices disagreement and commits when persuaded",
+          "Surfaces data-backed insights proactively",
+          "Anticipates what stakeholders need to know before being asked"
+        ],
+        shift: "From informing stakeholders to influencing them. Manager keeps people updated. Senior Manager builds the trust and credibility to change minds and unblock decisions across functions.",
+        nextBehaviors: [
+          "Builds credibility via constructive dialogues",
+          "Influences cross-functional stakeholders (with some support)",
+          "Actively resolves conflicts — doesn't avoid them"
+        ]
+      },
+      {
+        band: "B8", pts: 52,
+        label: "Builds credibility via dialogue; influences cross-functionally with some support",
+        behaviors: [
+          "Builds credibility via constructive dialogues",
+          "Influences cross-functional stakeholders with some support from manager",
+          "Actively resolves conflicts — doesn't avoid them",
+          "Changes minds and unblocks decisions across functions"
+        ],
+        shift: "From influencing with support to influencing independently. Senior Manager can move stakeholders but may need a manager's backing. GM walks into any room and gets alignment on their own credibility.",
+        nextBehaviors: [
+          "Builds trust through expectation-setting and proactive misses comms",
+          "Independently influences internal and cross-functional stakeholders",
+          "Articulates problems and solutions clearly in proposals"
+        ]
+      },
+      {
+        band: "B9", pts: 64,
+        label: "Fully independent internal & cross-functional influence; walks in with credibility",
+        behaviors: [
+          "Builds trust through expectation-setting and proactive misses comms",
+          "Independently influences internal and cross-functional stakeholders",
+          "Articulates problems and solutions clearly in proposals and forums",
+          "Walks into any room and gets alignment on own credibility — no manager backing needed"
+        ],
+        shift: "From influencing peers and cross-functional partners to influencing leaders. GM aligns people at their own level. Director has the credibility and communication craft to move VP-level decisions independently.",
+        nextBehaviors: [
+          "Successfully influences VP-level leaders to align and deliver on priorities",
+          "Nurtures formal and informal stakeholder relationships actively",
+          "Fosters respectful comms culture; mentors team on conflict resolution"
+        ]
+      },
+      {
+        band: "B10", pts: 78,
+        label: "Influences VP-level leaders independently; mentors team on conflict resolution",
+        behaviors: [
+          "Successfully influences VP-level leaders to align and deliver on priorities",
+          "Nurtures formal and informal stakeholder relationships actively",
+          "Fosters respectful comms culture; mentors team on conflict resolution",
+          "Moves VP-level decisions independently, without manager backing"
+        ],
+        shift: "From aligning stakeholders to shaping organisational direction. Director gets VP-level buy-in. AVP is in the room where strategy is set — building narratives that move SVPs and external partners at the highest level.",
+        nextBehaviors: [
+          "Pulls entire org toward shared vision — not just down the hierarchy",
+          "Influences SVPs and external parties independently",
+          "Crafts narratives for senior leadership; surfaces PoV in leadership forums"
+        ]
+      },
+      {
+        band: "B11", pts: 94,
+        label: "Influences SVPs & external parties; crafts narratives for senior leadership forums",
+        behaviors: [
+          "Pulls entire org toward shared vision — not just down the hierarchy",
+          "Influences SVPs and external parties independently",
+          "Crafts narratives for senior leadership; surfaces PoV in leadership forums",
+          "Shapes organisational direction through communication at the highest level"
+        ],
+        shift: null
+      }
     ]
   },
   {
-    id:"people", name:"People & org building",
-    mercer:"People", weight:20,
-    swiggy:"Org building · Talent development",
-    iconBg:"#E6F1FB", iconColor:"#0C447C",
-    pillBg:"#E6F1FB", pillColor:"#0C447C",
-    levels:[
-      {band:"B6", pts:28, label:"Invests in own growth; supports teammates; participates in hiring if applicable"},
-      {band:"B7", pts:38, label:"Delegates with expectations; coaches via knowledge-sharing; addresses skill gaps"},
-      {band:"B8", pts:50, label:"Owns hiring bar; targeted dev plans per person; motivates through challenges"},
-      {band:"B9", pts:62, label:"Org design mindset; plans team careers; coaches & mentors; avoids overstaffing"},
-      {band:"B10",pts:76, label:"Multiplies talent; grooms successors; enables team members to coach others"},
-      {band:"B11",pts:92, label:"Attracts Director-level talent; future-proofs org; drives high perf + psych safety"}
+    id: "people",
+    name: "People & org building",
+    mercer: "People",
+    weight: 20,
+    swiggy: "Org building · Talent development",
+    definition: "Whether you invest in your own growth vs others', how deeply you develop your team, and whether your org can outlast your presence. The progression moves from self-focused → coaching others → building an org that generates the next generation.",
+    iconBg: "#E6F1FB", iconColor: "#0C447C",
+    pillBg: "#E6F1FB", pillColor: "#0C447C",
+    levels: [
+      {
+        band: "B6", pts: 28,
+        label: "Invests in own growth; supports teammates; participates in hiring if applicable",
+        behaviors: [
+          "Supports teammates; checks in on tasks",
+          "Invests primarily in own growth",
+          "Participates in hiring if applicable",
+          "Focus is on personal development"
+        ],
+        shift: "From investing in self to investing in others. AM focuses on their own development. Manager is responsible for the output and growth of the people around them.",
+        nextBehaviors: [
+          "Delegates with clear expectations and check-ins",
+          "Coaches through knowledge sharing",
+          "Identifies skill gaps and addresses them in the team"
+        ]
+      },
+      {
+        band: "B7", pts: 38,
+        label: "Delegates with expectations; coaches via knowledge-sharing; addresses skill gaps",
+        behaviors: [
+          "Delegates with clear expectations and check-ins",
+          "Coaches through knowledge sharing",
+          "Identifies skill gaps and addresses them",
+          "Takes responsibility for the output and growth of people around them"
+        ],
+        shift: "From generic people management to individualised talent development. Manager delegates and coaches broadly. Senior Manager diagnoses each person's specific gaps and designs targeted interventions.",
+        nextBehaviors: [
+          "Maintains hiring bar actively",
+          "Motivates through retention and comp challenges",
+          "Designs targeted development plans for each team member"
+        ]
+      },
+      {
+        band: "B8", pts: 50,
+        label: "Owns hiring bar; targeted dev plans per person; motivates through challenges",
+        behaviors: [
+          "Maintains hiring bar actively",
+          "Motivates through retention and comp challenges",
+          "Designs targeted development plans for each team member",
+          "Diagnoses each person's specific gaps; individualised coaching — not generic"
+        ],
+        shift: "From developing individuals to shaping the team's future. Senior Manager works on people one at a time. GM thinks about org design, career trajectories, and whether the team is built for what's coming.",
+        nextBehaviors: [
+          "High hiring bar; avoids overstaffing; plans team careers",
+          "Sets clear performance expectations and holds teams accountable",
+          "Coaches and mentors; plans team careers actively"
+        ]
+      },
+      {
+        band: "B9", pts: 62,
+        label: "Org design mindset; plans team careers; coaches & mentors; avoids overstaffing",
+        behaviors: [
+          "High hiring bar; avoids overstaffing; plans team careers",
+          "Sets clear performance expectations and holds teams accountable",
+          "Coaches and mentors; plans team careers actively",
+          "Thinks about org design and whether the team is built for what's coming"
+        ],
+        shift: "From managing talent to multiplying it. GM builds strong individuals. Director creates an environment where those individuals develop the next generation — coaching cascades down, not just from the top.",
+        nextBehaviors: [
+          "Enables team members to lead projects and coach others",
+          "Maintains talent density; grooms successors; reduces single points of failure",
+          "Sets bar for hiring: quality, diversity, complementing skillsets"
+        ]
+      },
+      {
+        band: "B10", pts: 76,
+        label: "Multiplies talent; grooms successors; enables team members to coach others",
+        behaviors: [
+          "Enables team members to lead projects and coach others",
+          "Maintains talent density; keen eye for high performance; grooms successors",
+          "Sets bar for hiring: quality, diversity, complementing skillsets",
+          "Creates an environment where coaching cascades down — not just from the top"
+        ],
+        shift: "From developing managers to attracting and building leaders. Director grows the people already in the team. AVP's reputation draws senior talent to the organisation — and they build teams resilient to future challenges, not just current ones.",
+        nextBehaviors: [
+          "Drives high performance with high psychological safety",
+          "Can attract Director-level talent independently",
+          "Builds future-proofed team: capability building, rotation, successors"
+        ]
+      },
+      {
+        band: "B11", pts: 92,
+        label: "Attracts Director-level talent; future-proofs org; drives high perf + psych safety",
+        behaviors: [
+          "Drives high performance with high psychological safety",
+          "Can attract Director-level talent independently",
+          "Builds future-proofed team: capability building, rotation, successors",
+          "Organisation is resilient to future challenges — not personality-dependent"
+        ],
+        shift: null
+      }
     ]
   },
   {
-    id:"knowledge", name:"Knowledge & expertise",
-    mercer:"Knowledge", weight:15,
-    swiggy:"Business acumen · Competitive intelligence",
-    iconBg:"#FAEEDA", iconColor:"#633806",
-    pillBg:"#FAEEDA", pillColor:"#633806",
-    levels:[
-      {band:"B6", pts:24, label:"Understands own area metrics; applies given playbooks; stays current on basics"},
-      {band:"B7", pts:32, label:"Tracks competition, customer prefs, industry trends; proposes SOP changes"},
-      {band:"B8", pts:42, label:"Deep user persona understanding; knows USPs vs competitors; leverages industry data"},
-      {band:"B9", pts:54, label:"Tribal knowledge; go-to SME; infers patterns from varied data; emerging user insights"},
-      {band:"B10",pts:66, label:"Long-term market thinking (>6 months); deep expertise across adjacent functions"},
-      {band:"B11",pts:80, label:"BU-level strategic knowledge; preempts interaction effects; futuristic outside-in view"}
+    id: "knowledge",
+    name: "Knowledge & expertise",
+    mercer: "Knowledge",
+    weight: 15,
+    swiggy: "Business acumen · Competitive intelligence",
+    definition: "How deeply you understand your market, users, and business — and whether that knowledge is wide and forward-looking enough to anticipate what's next. Tracks from knowing your area → understanding the market → becoming the authority → owning the roadmap.",
+    iconBg: "#FAEEDA", iconColor: "#633806",
+    pillBg: "#FAEEDA", pillColor: "#633806",
+    levels: [
+      {
+        band: "B6", pts: 24,
+        label: "Understands own area metrics; applies given playbooks; stays current on basics",
+        behaviors: [
+          "Understands metrics in own area",
+          "Applies given playbooks",
+          "Stays current on basics within own function",
+          "Knowledge is scoped to immediate work area"
+        ],
+        shift: "From executing within a playbook to improving it. At AM, the playbook is given. At Manager, you are expected to understand customer preferences, competition, and industry trends well enough to propose changes.",
+        nextBehaviors: [
+          "Tracks metrics and spots new problems",
+          "Proposes changes to SOPs",
+          "Understands customer preferences, competition, and industry trends"
+        ]
+      },
+      {
+        band: "B7", pts: 32,
+        label: "Tracks competition, customer prefs, industry trends; proposes SOP changes",
+        behaviors: [
+          "Tracks metrics and spots new problems",
+          "Proposes changes to SOPs based on external knowledge",
+          "Understands customer preferences, competition, and industry trends",
+          "Goes beyond own area to understand the broader market"
+        ],
+        shift: "From knowing your area to deeply understanding users and competitors. Manager understands trends. Senior Manager triangulates data, user insight, and business context to surface root causes others haven't seen.",
+        nextBehaviors: [
+          "Independently breaks down problems using business insights and user data",
+          "Aware of key competitors and Swiggy's USP in detail",
+          "Understands multiple user personas — stated and unstated needs"
+        ]
+      },
+      {
+        band: "B8", pts: 42,
+        label: "Deep user persona understanding; knows USPs vs competitors; leverages industry data",
+        behaviors: [
+          "Independently breaks down problems using business insights and user data",
+          "Aware of key competitors and Swiggy's USP",
+          "Understands multiple user personas — stated and unstated needs",
+          "Triangulates data, user insight, and business context to surface root causes"
+        ],
+        shift: "From understanding users to becoming the authority on them. Senior Manager knows the data. GM has such depth — in users, market, and org — that they are the go-to person when the team is stuck.",
+        nextBehaviors: [
+          "Infers patterns and root causes from varied data; high judgment",
+          "Defines and prioritises problems right, even with incomplete data",
+          "Brings emerging user insights consistently; places user at the centre"
+        ]
+      },
+      {
+        band: "B9", pts: 54,
+        label: "Tribal knowledge; go-to SME; infers patterns from varied data; emerging user insights",
+        behaviors: [
+          "Infers patterns and root causes from varied data; high judgment",
+          "Defines and prioritises problems right, even with incomplete data",
+          "Brings emerging user insights consistently; places user at the centre",
+          "Go-to SME when the team is stuck; deep tribal knowledge"
+        ],
+        shift: "From being the expert to owning the roadmap. GM has deep knowledge. Director uses that knowledge to independently create and change the roadmap — anticipating how decisions affect adjacent functions.",
+        nextBehaviors: [
+          "Independently creates and changes roadmap with full inter-dependency view",
+          "Thinks long-term (>6 months): emerging markets, changing demographics",
+          "Deep tribal knowledge spanning the sub-function and adjacent areas"
+        ]
+      },
+      {
+        band: "B10", pts: 66,
+        label: "Long-term market thinking (>6 months); deep expertise across adjacent functions",
+        behaviors: [
+          "Independently creates and changes roadmap with full inter-dependency view",
+          "Thinks long-term (>6 months): emerging markets, changing demographics",
+          "Go-to SME when team is stuck; deep tribal knowledge",
+          "Anticipates how decisions affect adjacent functions"
+        ],
+        shift: "From deep domain expertise to BU-level strategic intelligence. Director knows their sub-function inside out. AVP connects how every sub-function within the BU interacts — and preempts the interaction effects before they become problems.",
+        nextBehaviors: [
+          "Connects dots across the BU to arrive at annual function strategy",
+          "Preempts interaction effects of own projects on other functions",
+          "High judgment — right a lot; intuition matches data; role-model end-user first"
+        ]
+      },
+      {
+        band: "B11", pts: 80,
+        label: "BU-level strategic knowledge; preempts interaction effects; futuristic outside-in view",
+        behaviors: [
+          "Connects dots across the BU to arrive at annual function strategy",
+          "Preempts interaction effects of own projects on other functions",
+          "High judgment — right a lot; intuition matches data; role-model end-user first",
+          "Knowledge spans the entire BU and connects to long-term strategic direction"
+        ],
+        shift: null
+      }
     ]
   }
 ];
@@ -416,10 +918,44 @@ function renderSummary() {
     const pct = Math.round(completed / FACTORS.length * 100);
     el.innerHTML = `<div class="progress-card">
       <div class="progress-label">Progress</div>
-      <div class="progress-count">${completed} of ${FACTORS.length} factors scored</div>
+      <div class="progress-count">${completed} of ${FACTORS.length} competencies scored</div>
       <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
     </div>`;
   }
+}
+
+function renderGuidance(f, sel) {
+  const lv = f.levels[sel];
+  const nextLevel = sel < f.levels.length - 1 ? f.levels[sel + 1] : null;
+  const pct = Math.round((lv.pts / f.levels[5].pts) * 100);
+
+  const behaviorItems = lv.behaviors.map(b => `<li>${b}</li>`).join('');
+
+  const shiftSection = lv.shift
+    ? `<div class="shift-box">
+        <div class="shift-label">To reach ${nextLevel ? nextLevel.band + ' — ' + bandName(nextLevel.band) : 'next level'}</div>
+        <div class="shift-text">${lv.shift}</div>
+        ${lv.nextBehaviors ? `<ul class="next-bullets">${lv.nextBehaviors.map(b => `<li>${b}</li>`).join('')}</ul>` : ''}
+      </div>`
+    : `<div class="top-level-note">You are at the highest band (B11 — AVP). This is the ceiling of the levelling framework.</div>`;
+
+  return `
+    <div class="guidance-panel">
+      <div class="guidance-section">
+        <div class="guidance-label">At ${lv.band} you are expected to</div>
+        <ul class="guidance-bullets">${behaviorItems}</ul>
+      </div>
+      ${shiftSection}
+    </div>
+    <div class="score-bar-wrap">
+      <div class="score-bar-bg"><div class="score-bar-fill" style="width:${pct}%"></div></div>
+      <div class="score-bar-labels"><span>${f.levels[0].pts} min</span><span>${f.levels[5].pts} max</span></div>
+    </div>`;
+}
+
+function bandName(band) {
+  const names = { B6:'AM', B7:'Manager', B8:'Sr. Manager', B9:'GM', B10:'Director', B11:'AVP' };
+  return names[band] || band;
 }
 
 function renderFactors() {
@@ -428,7 +964,6 @@ function renderFactors() {
     const sel = selections[f.id];
     const isOpen = expanded[f.id];
     const pts = sel !== null ? f.levels[sel].pts : null;
-    const pct = pts !== null ? Math.round((pts / f.levels[5].pts) * 100) : 0;
 
     const pill = pts !== null
       ? `<div class="score-pill" style="background:${f.pillBg};color:${f.pillColor}">${pts} pts &nbsp; ${f.levels[sel].band}</div>`
@@ -441,14 +976,11 @@ function renderFactors() {
     ).join('');
 
     const body = isOpen ? `<div class="factor-body">
+      <p class="factor-definition">${f.definition}</p>
       <div class="level-grid">${levelBtns}</div>
       ${sel !== null
-        ? `<div class="level-desc">${f.levels[sel].label}</div>
-           <div class="score-bar-wrap">
-             <div class="score-bar-bg"><div class="score-bar-fill" style="width:${pct}%"></div></div>
-             <div class="score-bar-labels"><span>${f.levels[0].pts} min</span><span>${f.levels[5].pts} max</span></div>
-           </div>`
-        : `<div class="level-desc empty">Select a band above to score this factor</div>`
+        ? renderGuidance(f, sel)
+        : `<div class="empty-guidance">Select a band above to see what's expected and what changes to reach the next level.</div>`
       }
     </div>` : '';
 
@@ -468,10 +1000,7 @@ function renderFactors() {
 
 function renderCTA() {
   const el = document.getElementById('cta');
-  const completed = completedCount();
-  if (completed === FACTORS.length) {
-    const total = totalScore();
-    const band = getBand(total);
+  if (completedCount() === FACTORS.length) {
     el.innerHTML = `<div class="cta-row">
       <button class="btn-sec" onclick="resetAll()">Reset scores</button>
     </div>`;
