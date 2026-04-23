@@ -53,39 +53,131 @@
       line-height: 1.6;
     }
 
-    .container { max-width: 680px; margin: 0 auto; }
+    .container { max-width: 720px; margin: 0 auto; }
 
-    .page-header { margin-bottom: 2rem; }
+    .page-header { margin-bottom: 1.5rem; }
     .page-label {
       font-size: 11px; text-transform: uppercase; letter-spacing: .08em;
       color: var(--text-tertiary); margin-bottom: 6px;
     }
     .page-title { font-size: 24px; font-weight: 500; color: var(--text-primary); margin-bottom: 6px; }
-    .page-desc { font-size: 14px; color: var(--text-secondary); line-height: 1.7; }
 
+    /* Tab navigation */
+    .tab-nav {
+      display: flex; gap: 2px;
+      background: var(--bg-secondary);
+      border: 0.5px solid var(--border-md);
+      border-radius: var(--radius-lg);
+      padding: 4px;
+      margin-bottom: 1.5rem;
+      overflow-x: auto;
+    }
+    .tab-btn {
+      flex: 1; min-width: 0;
+      padding: 8px 14px;
+      border: none; border-radius: var(--radius-md);
+      background: transparent;
+      font-family: inherit; font-size: 13px;
+      color: var(--text-secondary);
+      cursor: pointer; white-space: nowrap;
+      transition: all .15s;
+      text-align: center;
+    }
+    .tab-btn:hover { color: var(--text-primary); background: var(--bg-tertiary); }
+    .tab-btn.active {
+      background: var(--bg);
+      color: var(--text-primary); font-weight: 500;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ─── JE Explainer tab ─── */
+    .je-section {
+      background: var(--bg);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px 20px 16px;
+      margin-bottom: 12px;
+    }
+    .je-section-label {
+      font-size: 10px; text-transform: uppercase; letter-spacing: .08em;
+      font-weight: 600; color: var(--text-tertiary); margin-bottom: 10px;
+    }
+    .je-section-title {
+      font-size: 16px; font-weight: 500; color: var(--text-primary); margin-bottom: 8px;
+    }
+    .je-text {
+      font-size: 13.5px; color: var(--text-secondary); line-height: 1.75; margin-bottom: 10px;
+    }
+    .je-text:last-child { margin-bottom: 0; }
+    .je-callout {
+      background: var(--green-bg);
+      border-left: 2px solid var(--green-border);
+      padding: 10px 14px;
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+      margin: 12px 0;
+    }
+    .je-callout-label {
+      font-size: 10px; text-transform: uppercase; letter-spacing: .07em;
+      font-weight: 600; color: var(--green-dark); margin-bottom: 4px;
+    }
+    .je-callout-text { font-size: 13px; color: var(--green-text); line-height: 1.65; }
+    .je-method-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 10px 0;
+    }
+    .je-method-card {
+      background: var(--bg-secondary);
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+    }
+    .je-method-name { font-size: 12px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; }
+    .je-method-tag {
+      display: inline-block;
+      font-size: 10px; padding: 2px 7px;
+      border-radius: 10px; margin-bottom: 6px;
+      font-weight: 500;
+    }
+    .je-method-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.55; }
+
+    .je-table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 12.5px; }
+    .je-table th {
+      text-align: left; font-size: 10px; text-transform: uppercase; letter-spacing: .06em;
+      color: var(--text-tertiary); font-weight: 600;
+      padding: 6px 10px; border-bottom: 0.5px solid var(--border);
+    }
+    .je-table td {
+      padding: 7px 10px; color: var(--text-secondary);
+      border-bottom: 0.5px solid var(--border); vertical-align: top; line-height: 1.5;
+    }
+    .je-table tr:last-child td { border-bottom: none; }
+    .je-table td:first-child { font-weight: 500; color: var(--text-primary); white-space: nowrap; }
+    .je-table td.center { text-align: center; }
+
+    .factor-pill {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 4px 10px; border-radius: 20px;
+      font-size: 12px; font-weight: 500; margin: 3px 3px 3px 0;
+    }
+
+    .band-visual {
+      display: flex; flex-direction: column; gap: 4px; margin: 10px 0;
+    }
+    .band-row {
+      display: flex; align-items: center; gap: 10px;
+    }
+    .band-row-label { font-size: 12px; font-weight: 600; color: var(--text-primary); width: 32px; flex-shrink: 0; }
+    .band-row-track { flex: 1; height: 6px; border-radius: 3px; }
+    .band-row-info { font-size: 11px; color: var(--text-secondary); }
+
+    /* ─── Scorecard tab (existing) ─── */
     .summary-card {
       background: var(--bg-secondary);
       border-radius: var(--radius-lg);
       padding: 1rem 1.25rem;
       margin-bottom: 1rem;
     }
-    .summary-inner { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
-    .ipe-total { font-size: 32px; font-weight: 500; color: var(--text-primary); }
-    .ipe-max { font-size: 16px; color: var(--text-tertiary); }
-    .band-chip {
-      display: inline-flex; align-items: center; gap: 6px;
-      background: var(--green-bg); border: 0.5px solid var(--green-border);
-      border-radius: 20px; padding: 4px 14px;
-      font-size: 13px; color: var(--green-dark); font-weight: 500; margin-top: 8px;
-    }
-    .band-ranges { text-align: right; }
-    .band-range-row {
-      font-size: 12px; color: var(--text-tertiary);
-      line-height: 1.9; transition: color .2s;
-    }
-    .band-range-row.active { color: var(--green-dark); font-weight: 500; }
-
-    /* Summary card — always visible, collapsible */
     .sc-header {
       padding: 12px 14px;
       cursor: pointer;
@@ -116,7 +208,6 @@
     .sc-progress-label { font-size: 11px; color: var(--text-tertiary); white-space: nowrap; }
     .sc-toggle { font-size: 10px; color: var(--text-tertiary); transition: transform .2s; margin-left: auto; flex-shrink: 0; }
     .sc-toggle.open { transform: rotate(180deg); }
-
     .sc-body { padding: 0 14px 14px; border-top: 0.5px solid var(--border); }
     .sc-factor-row { display: flex; align-items: center; gap: 10px; margin-bottom: 7px; }
     .sc-factor-name { font-size: 12px; color: var(--text-secondary); width: 160px; flex-shrink: 0; }
@@ -128,17 +219,10 @@
     .sc-factor-pts.unscored { color: var(--border-md); }
 
     .divider { height: 0.5px; background: var(--border); margin: 1rem 0; }
-
     .breakdown-label {
       font-size: 11px; text-transform: uppercase; letter-spacing: .06em;
       color: var(--text-tertiary); margin-bottom: 10px;
     }
-    .factor-row { display: flex; align-items: center; gap: 10px; margin-bottom: 7px; }
-    .factor-row-name { font-size: 12px; color: var(--text-secondary); width: 160px; flex-shrink: 0; }
-    .mini-bar-bg { flex: 1; height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; }
-    .mini-bar-fill { height: 100%; border-radius: 3px; background: var(--green); transition: width .35s; }
-    .factor-row-pts { font-size: 12px; color: var(--text-tertiary); width: 56px; text-align: right; flex-shrink: 0; }
-
     .radar-wrap { position: relative; width: 100%; height: 280px; margin: 1rem 0 0.5rem; }
 
     .factor-card {
@@ -174,19 +258,12 @@
       margin-left: 4px; display: inline-block; transition: transform .2s;
     }
     .open .arrow { transform: rotate(180deg); }
-
-    .factor-body {
-      padding: 0 14px 14px;
-      border-top: 0.5px solid var(--border);
-    }
-
+    .factor-body { padding: 0 14px 14px; border-top: 0.5px solid var(--border); }
     .factor-definition {
       font-size: 12.5px; color: var(--text-secondary);
       line-height: 1.65; padding: 10px 0 2px;
-      border-bottom: 0.5px solid var(--border);
-      margin-bottom: 2px;
+      border-bottom: 0.5px solid var(--border); margin-bottom: 2px;
     }
-
     .level-grid {
       display: grid; grid-template-columns: repeat(6, 1fr);
       gap: 5px; margin: 12px 0 10px;
@@ -205,10 +282,8 @@
     .level-btn:hover { border-color: var(--green); color: var(--green-dark); background: var(--green-bg); }
     .level-btn.active { border-color: var(--green); background: var(--green-bg); color: var(--green-dark); font-weight: 500; }
 
-    /* Guidance panel */
     .guidance-panel { margin-top: 4px; }
     .guidance-section { margin-bottom: 10px; }
-
     .guidance-label {
       font-size: 10px; text-transform: uppercase; letter-spacing: .07em;
       color: var(--text-tertiary); margin-bottom: 6px; font-weight: 500;
@@ -223,9 +298,7 @@
       font-size: 12.5px; color: var(--text-secondary);
       padding: 3px 0 3px 16px; position: relative; line-height: 1.55;
     }
-    .guidance-bullets li::before {
-      content: '–'; position: absolute; left: 0; color: var(--text-tertiary);
-    }
+    .guidance-bullets li::before { content: '–'; position: absolute; left: 0; color: var(--text-tertiary); }
 
     .shift-box {
       background: var(--green-bg);
@@ -238,31 +311,15 @@
       font-size: 10px; text-transform: uppercase; letter-spacing: .07em;
       color: var(--green-dark); margin-bottom: 5px; font-weight: 600;
     }
-    .shift-text {
-      font-size: 12.5px; color: var(--green-text); line-height: 1.65;
-      font-style: italic;
-    }
-    .next-bullets {
-      list-style: none; padding: 0; margin-top: 8px;
-    }
+    .shift-text { font-size: 12.5px; color: var(--green-text); line-height: 1.65; font-style: italic; }
+    .next-bullets { list-style: none; padding: 0; margin-top: 8px; }
     .next-bullets li {
       font-size: 12px; color: var(--green-text);
       padding: 2px 0 2px 18px; position: relative; line-height: 1.5;
     }
-    .next-bullets li::before {
-      content: '→'; position: absolute; left: 0;
-      color: var(--green); font-size: 11px; line-height: 1.5;
-    }
-
-    .top-level-note {
-      font-size: 12px; color: var(--text-tertiary);
-      font-style: italic; padding: 8px 0;
-    }
-
-    .empty-guidance {
-      font-size: 12px; color: var(--text-tertiary);
-      font-style: italic; padding: 10px 0;
-    }
+    .next-bullets li::before { content: '→'; position: absolute; left: 0; color: var(--green); font-size: 11px; line-height: 1.5; }
+    .top-level-note { font-size: 12px; color: var(--text-tertiary); font-style: italic; padding: 8px 0; }
+    .empty-guidance { font-size: 12px; color: var(--text-tertiary); font-style: italic; padding: 10px 0; }
 
     .score-bar-wrap { margin-top: 12px; }
     .score-bar-bg { height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
@@ -288,62 +345,6 @@
     }
     .btn-sec:hover { background: var(--bg-secondary); }
 
-    .footer {
-      text-align: center; margin-top: 3rem;
-      font-size: 12px; color: var(--text-tertiary);
-    }
-
-    /* IPE explainer card */
-    .explainer-card {
-      background: var(--bg);
-      border: 0.5px solid var(--border);
-      border-radius: var(--radius-lg);
-      margin-bottom: 1.25rem;
-      overflow: hidden;
-    }
-    .explainer-header {
-      padding: 11px 14px;
-      cursor: pointer;
-      display: flex; align-items: center; justify-content: space-between; gap: 10px;
-      transition: background .15s;
-    }
-    .explainer-header:hover { background: var(--bg-secondary); }
-    .explainer-header-left { display: flex; align-items: center; gap: 10px; }
-    .explainer-icon {
-      width: 28px; height: 28px; border-radius: var(--radius-md);
-      background: #EEEDFE; color: #3C3489;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 13px; flex-shrink: 0;
-    }
-    .explainer-title { font-size: 13px; font-weight: 500; color: var(--text-primary); }
-    .explainer-subtitle { font-size: 11px; color: var(--text-tertiary); margin-top: 1px; }
-    .explainer-toggle { font-size: 10px; color: var(--text-tertiary); transition: transform .2s; }
-    .explainer-toggle.open { transform: rotate(180deg); }
-    .explainer-body {
-      padding: 0 14px 14px;
-      border-top: 0.5px solid var(--border);
-    }
-    .explainer-section { margin-top: 12px; }
-    .explainer-section-title {
-      font-size: 10px; text-transform: uppercase; letter-spacing: .07em;
-      color: var(--text-tertiary); font-weight: 600; margin-bottom: 5px;
-    }
-    .explainer-text { font-size: 12.5px; color: var(--text-secondary); line-height: 1.7; }
-    .explainer-table {
-      width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 12px;
-    }
-    .explainer-table th {
-      text-align: left; font-size: 10px; text-transform: uppercase; letter-spacing: .06em;
-      color: var(--text-tertiary); font-weight: 600;
-      padding: 4px 8px; border-bottom: 0.5px solid var(--border);
-    }
-    .explainer-table td {
-      padding: 5px 8px; color: var(--text-secondary);
-      border-bottom: 0.5px solid var(--border); vertical-align: top;
-    }
-    .explainer-table tr:last-child td { border-bottom: none; }
-    .explainer-table td:first-child { color: var(--text-primary); font-weight: 500; white-space: nowrap; }
-
     /* Sticky score bar */
     .sticky-bar {
       position: fixed; top: 0; left: 0; right: 0; z-index: 100;
@@ -357,7 +358,7 @@
     }
     .sticky-bar.visible { transform: translateY(0); }
     .sticky-inner {
-      max-width: 680px; width: 100%;
+      max-width: 720px; width: 100%;
       display: flex; align-items: center; justify-content: space-between; gap: 12px;
     }
     .sticky-left { display: flex; align-items: baseline; gap: 6px; }
@@ -373,18 +374,104 @@
     .sticky-progress-fill { height: 100%; border-radius: 2px; background: var(--green); transition: width .3s; }
     .sticky-progress-label { font-size: 11px; color: var(--text-tertiary); }
 
-    @media (max-width: 500px) {
+    /* ─── Competency Levels tab ─── */
+    .band-selector {
+      display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1.25rem;
+    }
+    .band-pill-btn {
+      padding: 7px 16px;
+      border: 0.5px solid var(--border-md);
+      border-radius: 20px;
+      background: var(--bg);
+      font-family: inherit; font-size: 13px;
+      color: var(--text-secondary);
+      cursor: pointer; transition: all .15s;
+    }
+    .band-pill-btn:hover { border-color: var(--green); color: var(--green-dark); background: var(--green-bg); }
+    .band-pill-btn.active { border-color: var(--green); background: var(--green-bg); color: var(--green-dark); font-weight: 600; }
+
+    .level-header-card {
+      background: var(--bg);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 16px 18px;
+      margin-bottom: 12px;
+    }
+    .level-header-top {
+      display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 6px;
+    }
+    .level-header-band { font-size: 22px; font-weight: 500; color: var(--text-primary); }
+    .level-header-title { font-size: 15px; color: var(--text-secondary); }
+    .level-header-range { font-size: 12px; color: var(--text-tertiary); margin-top: 2px; }
+
+    .comp-card {
+      background: var(--bg);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      margin-bottom: 10px;
+      overflow: hidden;
+    }
+    .comp-card-header {
+      padding: 12px 14px 10px;
+      display: flex; align-items: flex-start; gap: 10px;
+    }
+    .comp-card-icon {
+      width: 30px; height: 30px; border-radius: var(--radius-md);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; font-size: 13px; font-weight: 500;
+    }
+    .comp-card-meta { flex: 1; min-width: 0; }
+    .comp-card-name { font-size: 14px; font-weight: 500; color: var(--text-primary); margin-bottom: 2px; }
+    .comp-card-sub { font-size: 11px; color: var(--text-tertiary); }
+    .comp-card-pts {
+      font-size: 13px; font-weight: 500;
+      padding: 3px 10px; border-radius: 20px; flex-shrink: 0;
+    }
+    .comp-card-body {
+      padding: 0 14px 14px;
+      border-top: 0.5px solid var(--border);
+    }
+    .comp-level-label {
+      font-size: 12.5px; color: var(--text-secondary);
+      font-style: italic; padding: 8px 0 6px; line-height: 1.5;
+    }
+    .comp-behaviors {
+      list-style: none; padding: 0;
+      background: var(--bg-secondary);
+      border-radius: var(--radius-md);
+      padding: 8px 12px;
+      margin-top: 4px;
+    }
+    .comp-behaviors li {
+      font-size: 12.5px; color: var(--text-secondary);
+      padding: 3px 0 3px 16px; position: relative; line-height: 1.55;
+    }
+    .comp-behaviors li::before { content: '–'; position: absolute; left: 0; color: var(--text-tertiary); }
+
+    .scorecard-note {
+      font-size: 12px; color: var(--text-tertiary);
+      padding: 10px 14px;
+      background: var(--bg-secondary);
+      border-radius: var(--radius-md);
+      margin-bottom: 12px;
+    }
+
+    .footer {
+      text-align: center; margin-top: 3rem;
+      font-size: 12px; color: var(--text-tertiary);
+    }
+
+    @media (max-width: 540px) {
       .level-grid { grid-template-columns: repeat(3, 1fr); }
-      .summary-inner { flex-direction: column; }
-      .band-ranges { text-align: left; }
-      .factor-row-name { width: 120px; }
+      .sc-factor-name { width: 120px; }
       .sticky-progress { display: none; }
+      .je-method-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
 
-<!-- Sticky score bar (appears on scroll) -->
+<!-- Sticky score bar (scorecard tab only) -->
 <div class="sticky-bar" id="stickyBar">
   <div class="sticky-inner">
     <div class="sticky-left">
@@ -403,63 +490,201 @@
 
   <div class="page-header">
     <div class="page-label">Swiggy · Job evaluation</div>
-    <h1 class="page-title">Mercer IPE scorecard</h1>
-    <p class="page-desc">Rate yourself on each of the five competencies. Select a band to see what's expected at that level and what shifts are needed to reach the next one.</p>
+    <h1 class="page-title">Mercer IPE Framework</h1>
   </div>
 
-  <!-- IPE explainer card -->
-  <div class="explainer-card" id="explainerCard">
-    <div class="explainer-header" onclick="toggleExplainer()">
-      <div class="explainer-header-left">
-        <div class="explainer-icon">?</div>
-        <div>
-          <div class="explainer-title">What is the IPE framework?</div>
-          <div class="explainer-subtitle">How JE points map to levels across industries</div>
+  <!-- Tab navigation -->
+  <div class="tab-nav" role="tablist">
+    <button class="tab-btn" id="tab-je" onclick="switchTab('je')" role="tab">What is JE?</button>
+    <button class="tab-btn active" id="tab-scorecard" onclick="switchTab('scorecard')" role="tab">IPE Scorecard</button>
+    <button class="tab-btn" id="tab-levels" onclick="switchTab('levels')" role="tab">Competency Levels</button>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       TAB 1: Job Evaluation Explainer
+  ══════════════════════════════════════════ -->
+  <div class="tab-panel" id="panel-je">
+
+    <!-- What is JE -->
+    <div class="je-section">
+      <div class="je-section-label">Foundations</div>
+      <div class="je-section-title">What is Job Evaluation?</div>
+      <p class="je-text">Job Evaluation (JE) is a structured, systematic process for assessing the relative size of roles within an organisation. Unlike a performance review — which assesses how well a person is doing — JE assesses the job itself: its scope, complexity, accountability, and required expertise, regardless of who holds it.</p>
+      <p class="je-text">The output is a score (or grade) that positions the role on a scale, making it possible to compare roles across functions, geographies, and even companies. This creates a consistent foundation for decisions about compensation, career architecture, and levelling.</p>
+      <div class="je-callout">
+        <div class="je-callout-label">Key distinction</div>
+        <div class="je-callout-text">JE evaluates the <strong>role</strong>, not the person in it. Two people at the same role get the same JE score — regardless of performance or tenure. A promotion means the <em>role's scope has permanently shifted</em>, not just that the person has worked hard.</div>
+      </div>
+    </div>
+
+    <!-- Why companies use JE -->
+    <div class="je-section">
+      <div class="je-section-label">Purpose</div>
+      <div class="je-section-title">Why do companies use Job Evaluation?</div>
+      <table class="je-table">
+        <thead>
+          <tr><th>Goal</th><th>What JE enables</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Pay equity</td><td>Similar-sized roles receive similar base compensation, regardless of function or gender</td></tr>
+          <tr><td>Market benchmarking</td><td>Internal grades link to external salary surveys, enabling apples-to-apples comp comparison</td></tr>
+          <tr><td>Objective levelling</td><td>Promotion and placement decisions are grounded in role scope — not politics or tenure</td></tr>
+          <tr><td>Career architecture</td><td>Employees have clear, defensible criteria for what it takes to move to the next level</td></tr>
+          <tr><td>Org design</td><td>Leaders can compare role sizes across teams and ensure structure makes sense</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Methodologies -->
+    <div class="je-section">
+      <div class="je-section-label">Methodologies</div>
+      <div class="je-section-title">Common JE approaches</div>
+      <p class="je-text">There are four widely used JE methodologies. Most large enterprises use a <strong>point-factor</strong> approach because it is transparent, scalable, and linkable to global compensation databases.</p>
+      <div class="je-method-grid">
+        <div class="je-method-card">
+          <div class="je-method-name">Point-Factor</div>
+          <span class="je-method-tag" style="background:#E1F5EE;color:#085041">Most common</span>
+          <p class="je-method-desc">Roles are scored on multiple factors (e.g. scope, complexity, accountability). Scores are summed into a total point value. Mercer IPE and Hay Group use this approach.</p>
+        </div>
+        <div class="je-method-card">
+          <div class="je-method-name">Job Ranking</div>
+          <span class="je-method-tag" style="background:#F0EDE8;color:#5c5b57">Simple</span>
+          <p class="je-method-desc">Roles are ranked from largest to smallest based on overall perceived value. Fast but highly subjective — hard to defend at scale.</p>
+        </div>
+        <div class="je-method-card">
+          <div class="je-method-name">Job Classification</div>
+          <span class="je-method-tag" style="background:#F0EDE8;color:#5c5b57">Grade-based</span>
+          <p class="je-method-desc">Predefined grade descriptions are created, and jobs are slotted into the closest matching grade. Common in government and public sector.</p>
+        </div>
+        <div class="je-method-card">
+          <div class="je-method-name">Factor Comparison</div>
+          <span class="je-method-tag" style="background:#F0EDE8;color:#5c5b57">Hybrid</span>
+          <p class="je-method-desc">A hybrid of ranking and point-factor. Benchmark jobs are ranked on individual factors, then used to score other roles. Technically rigorous but rarely used today.</p>
         </div>
       </div>
-      <div class="explainer-toggle" id="explainerToggle">&#9650;</div>
     </div>
-    <div class="explainer-body" id="explainerBody" style="display:none">
 
-      <div class="explainer-section">
-        <div class="explainer-section-title">Job Evaluation (JE) — the basics</div>
-        <p class="explainer-text">Job Evaluation is a structured methodology used by companies to size roles objectively — independent of who holds them. Rather than setting levels based on tenure or title, JE scores the role itself on measurable dimensions. The output is a number (JE points) that sits on a global scale, making roles comparable across functions, geographies, and even companies.</p>
+    <!-- Mercer IPE deep dive -->
+    <div class="je-section">
+      <div class="je-section-label">Mercer IPE</div>
+      <div class="je-section-title">International Position Evaluation — how it works</div>
+      <p class="je-text">Mercer's IPE is the most widely adopted JE methodology globally, used by 20,000+ organisations across 150+ countries. It is a point-factor system that evaluates every role on five dimensions. The weighted sum of scores across these dimensions becomes the IPE score, which maps to a global compensation database covering millions of incumbents.</p>
+      <div class="je-callout">
+        <div class="je-callout-label">Why IPE?</div>
+        <div class="je-callout-text">Because IPE is global and standardised, Swiggy's internal grades can be directly mapped to Mercer's annual remuneration survey — enabling true market benchmarking. A B9 at Swiggy is genuinely comparable to a similar-scored role at any other participating company.</div>
       </div>
 
-      <div class="explainer-section">
-        <div class="explainer-section-title">Mercer IPE — how it works</div>
-        <p class="explainer-text">Mercer's International Position Evaluation (IPE) is the most widely used JE methodology globally, covering 20,000+ organisations. It evaluates every role on five factors — Impact, Innovation (complexity), Communication, People, and Knowledge — each weighted by how much that dimension contributes to the role's overall value. The weighted sum becomes the IPE score.</p>
-      </div>
-
-      <div class="explainer-section">
-        <div class="explainer-section-title">How industry maps JE points to levels</div>
-        <p class="explainer-text">Each company anchors its internal grades to IPE point bands. These bands are calibrated against Mercer's global remuneration surveys so that a B7 at Swiggy is genuinely comparable to a similar-sized role at any other participating company — enabling market benchmarking for compensation.</p>
-        <table class="explainer-table">
+      <div style="margin-top:14px">
+        <div class="je-section-label" style="margin-bottom:8px">The 5 IPE factors</div>
+        <table class="je-table">
           <thead>
-            <tr><th>IPE range</th><th>Swiggy band</th><th>Typical role</th><th>What this signals</th></tr>
+            <tr><th>Factor</th><th>What it measures</th><th style="text-align:center">Weight</th></tr>
           </thead>
           <tbody>
-            <tr><td>0 – 179</td><td>B6</td><td>Assistant Manager</td><td>Executes within a defined playbook; supervised delivery</td></tr>
-            <tr><td>180 – 219</td><td>B7</td><td>Manager</td><td>Plans own work; proactive stakeholder management; owns a charter</td></tr>
-            <tr><td>220 – 269</td><td>B8</td><td>Senior Manager</td><td>Manages multiple projects; cross-functional influence; team delivery</td></tr>
-            <tr><td>270 – 319</td><td>B9</td><td>General Manager</td><td>Owns strategic charters; high judgment; independent impact on BU goals</td></tr>
-            <tr><td>320 – 369</td><td>B10</td><td>Director</td><td>Owns sub-function end-to-end; sets execution standard; VP-level influence</td></tr>
-            <tr><td>370+</td><td>B11</td><td>AVP</td><td>Leads a function; shapes BU strategy; SVP-level influence; culture carrier</td></tr>
+            <tr>
+              <td><span style="display:inline-flex;align-items:center;gap:6px"><span style="width:22px;height:22px;border-radius:6px;background:#E1F5EE;color:#085041;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:600">I</span> Impact</span></td>
+              <td>Scope of accountability, autonomy, and whether outcomes are owned vs. contributed to</td>
+              <td class="center">25%</td>
+            </tr>
+            <tr>
+              <td><span style="display:inline-flex;align-items:center;gap:6px"><span style="width:22px;height:22px;border-radius:6px;background:#EEEDFE;color:#3C3489;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:600">N</span> Innovation</span></td>
+              <td>Degree of complexity and creativity required; how independently problems are identified and solved</td>
+              <td class="center">20%</td>
+            </tr>
+            <tr>
+              <td><span style="display:inline-flex;align-items:center;gap:6px"><span style="width:22px;height:22px;border-radius:6px;background:#FAECE7;color:#712B13;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:600">C</span> Communication</span></td>
+              <td>Breadth and level of influence; whether the role shapes decisions or just conveys information</td>
+              <td class="center">20%</td>
+            </tr>
+            <tr>
+              <td><span style="display:inline-flex;align-items:center;gap:6px"><span style="width:22px;height:22px;border-radius:6px;background:#E6F1FB;color:#0C447C;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:600">P</span> People</span></td>
+              <td>Whether the role develops, coaches, or builds organisational capability beyond its own output</td>
+              <td class="center">20%</td>
+            </tr>
+            <tr>
+              <td><span style="display:inline-flex;align-items:center;gap:6px"><span style="width:22px;height:22px;border-radius:6px;background:#FAEEDA;color:#633806;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:600">K</span> Knowledge</span></td>
+              <td>Depth and breadth of domain expertise; how much of the role's value comes from what it knows</td>
+              <td class="center">15%</td>
+            </tr>
           </tbody>
         </table>
       </div>
-
-      <div class="explainer-section">
-        <div class="explainer-section-title">Why it matters for promotion decisions</div>
-        <p class="explainer-text">JE scores make promotion conversations more objective. A promotion isn't just a title change — it's a claim that the role's scope, complexity, and accountability have permanently shifted upward across most dimensions. If your IPE score lands in the next band, it validates that the role has genuinely grown, not just the person's effort in the current one.</p>
-      </div>
-
     </div>
-  </div>
 
-  <div id="summary"></div>
-  <div id="factors"></div>
-  <div id="cta"></div>
+    <!-- Band mapping -->
+    <div class="je-section">
+      <div class="je-section-label">Grade mapping</div>
+      <div class="je-section-title">How IPE points map to Swiggy bands</div>
+      <p class="je-text">Each company anchors its internal grades to IPE point ranges. These ranges are calibrated against Mercer's global survey so that a given score means the same thing across participating organisations — enabling reliable compensation benchmarking.</p>
+      <table class="je-table">
+        <thead>
+          <tr><th>IPE range</th><th>Swiggy band</th><th>Typical title</th><th>What this signals</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>0 – 179</td><td>B6</td><td>Assistant Manager</td><td>Executes within a defined playbook; supervised delivery</td></tr>
+          <tr><td>180 – 219</td><td>B7</td><td>Manager</td><td>Plans own work; proactive stakeholder management; owns a charter</td></tr>
+          <tr><td>220 – 269</td><td>B8</td><td>Senior Manager</td><td>Manages multiple projects; cross-functional influence; team delivery</td></tr>
+          <tr><td>270 – 319</td><td>B9</td><td>General Manager</td><td>Owns strategic charters; high judgment; independent impact on BU goals</td></tr>
+          <tr><td>320 – 369</td><td>B10</td><td>Director</td><td>Owns sub-function end-to-end; sets execution standard; VP-level influence</td></tr>
+          <tr><td>370+</td><td>B11</td><td>AVP</td><td>Leads a function; shapes BU strategy; SVP-level influence; culture carrier</td></tr>
+        </tbody>
+      </table>
+
+      <div class="band-visual" style="margin-top:16px">
+        <div style="font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--text-tertiary);margin-bottom:6px">Point range by band (max 486 pts)</div>
+        <div class="band-row"><div class="band-row-label">B6</div><div class="band-row-track" style="background:#1D9E75;width:37%"></div><div class="band-row-info">0–179</div></div>
+        <div class="band-row"><div class="band-row-label">B7</div><div class="band-row-track" style="background:#1D9E75;width:45%"></div><div class="band-row-info">180–219</div></div>
+        <div class="band-row"><div class="band-row-label">B8</div><div class="band-row-track" style="background:#1D9E75;width:55%"></div><div class="band-row-info">220–269</div></div>
+        <div class="band-row"><div class="band-row-label">B9</div><div class="band-row-track" style="background:#1D9E75;width:66%"></div><div class="band-row-info">270–319</div></div>
+        <div class="band-row"><div class="band-row-label">B10</div><div class="band-row-track" style="background:#1D9E75;width:76%"></div><div class="band-row-info">320–369</div></div>
+        <div class="band-row"><div class="band-row-label">B11</div><div class="band-row-track" style="background:#1D9E75;width:100%"></div><div class="band-row-info">370+</div></div>
+      </div>
+    </div>
+
+    <!-- Why it matters for promotions -->
+    <div class="je-section">
+      <div class="je-section-label">Promotion context</div>
+      <div class="je-section-title">Why JE matters for promotion decisions</div>
+      <p class="je-text">JE scores make promotion conversations more objective. A promotion isn't just a title change — it's a claim that the role's scope, complexity, and accountability have permanently shifted upward across most dimensions.</p>
+      <p class="je-text">If your IPE score lands in the next band, it validates that the role has genuinely grown, not just that the person has worked hard in their current one. This is why calibration committees look at IPE scores alongside performance: they are asking whether the <em>seat</em> has grown, not just the person sitting in it.</p>
+      <div class="je-callout">
+        <div class="je-callout-label">Practical implication</div>
+        <div class="je-callout-text">Use the IPE Scorecard tab to score your current role. If most of your factor scores already sit in the next band, that's a strong signal your scope has grown and a promotion conversation is warranted. If only one or two factors are elevated, the role hasn't fully shifted — keep building the others.</div>
+      </div>
+    </div>
+
+  </div><!-- /panel-je -->
+
+
+  <!-- ══════════════════════════════════════════
+       TAB 2: IPE Scorecard
+  ══════════════════════════════════════════ -->
+  <div class="tab-panel active" id="panel-scorecard">
+    <div style="font-size:13.5px;color:var(--text-secondary);margin-bottom:1.25rem;line-height:1.65">
+      Rate yourself on each of the five competencies. Select a band to see what's expected at that level and what shifts are needed to reach the next one.
+    </div>
+    <div id="summary"></div>
+    <div id="factors"></div>
+    <div id="cta"></div>
+  </div><!-- /panel-scorecard -->
+
+
+  <!-- ══════════════════════════════════════════
+       TAB 3: Competency Levels
+  ══════════════════════════════════════════ -->
+  <div class="tab-panel" id="panel-levels">
+    <div style="font-size:13.5px;color:var(--text-secondary);margin-bottom:1.25rem;line-height:1.65">
+      Select a band to see what is expected across all five competencies at that level — as a standalone expectation, not a comparison to the next level.
+    </div>
+
+    <div class="band-selector" id="bandSelector">
+      <!-- rendered by JS -->
+    </div>
+
+    <div id="levelView">
+      <!-- rendered by JS -->
+    </div>
+  </div><!-- /panel-levels -->
 
   <div class="footer">Swiggy Levelling Framework &nbsp;·&nbsp; Mercer IPE methodology</div>
 </div>
@@ -993,44 +1218,65 @@ const FACTORS = [
 ];
 
 const BAND_RANGES = [
-  {band:"B6 — Assistant Manager", min:0,   max:179},
-  {band:"B7 — Manager",           min:180,  max:219},
-  {band:"B8 — Senior Manager",    min:220,  max:269},
-  {band:"B9 — General Manager",   min:270,  max:319},
-  {band:"B10 — Director",         min:320,  max:369},
-  {band:"B11 — AVP",              min:370,  max:999}
+  {band:"B6", title:"Assistant Manager", min:0,   max:179},
+  {band:"B7", title:"Manager",           min:180,  max:219},
+  {band:"B8", title:"Senior Manager",    min:220,  max:269},
+  {band:"B9", title:"General Manager",   min:270,  max:319},
+  {band:"B10", title:"Director",         min:320,  max:369},
+  {band:"B11", title:"AVP",              min:370,  max:999}
 ];
 
+// ── State ──
 let selections = {};
 let expanded = {};
 FACTORS.forEach(f => { selections[f.id] = null; expanded[f.id] = false; });
-
 let radarChart = null;
+let summaryOpen = true;
+let activeTab = 'scorecard';
+let selectedBandIdx = 0; // default to B6 on levels tab
 
+// ── Tab switching ──
+function switchTab(tab) {
+  activeTab = tab;
+  ['je','scorecard','levels'].forEach(t => {
+    document.getElementById('tab-' + t).classList.toggle('active', t === tab);
+    document.getElementById('panel-' + t).classList.toggle('active', t === tab);
+  });
+  // sticky bar only relevant on scorecard
+  const sb = document.getElementById('stickyBar');
+  if (tab !== 'scorecard') sb.classList.remove('visible');
+  if (tab === 'scorecard') updateStickyBar();
+  if (tab === 'levels') renderLevelView();
+  if (tab === 'levels') renderBandSelector();
+}
+
+// ── Scorecard helpers ──
 function totalScore() {
   return FACTORS.reduce((a, f) => a + (selections[f.id] !== null ? f.levels[selections[f.id]].pts : 0), 0);
 }
 function maxScore() { return FACTORS.reduce((a,f) => a + f.levels[5].pts, 0); }
 function completedCount() { return FACTORS.filter(f => selections[f.id] !== null).length; }
 function getBand(score) {
-  for (const b of BAND_RANGES) if (score >= b.min && score <= b.max) return b.band;
+  for (const b of BAND_RANGES) if (score >= b.min && score <= b.max) return b.band + ' — ' + b.title;
   return "Below B6";
 }
-
-let summaryOpen = true;
-function toggleSummary() {
-  summaryOpen = !summaryOpen;
-  renderSummary();
-}
-
 function nextBandInfo(score) {
   for (let i = 0; i < BAND_RANGES.length - 1; i++) {
     const b = BAND_RANGES[i];
     if (score >= b.min && score <= b.max) {
-      return { needed: BAND_RANGES[i + 1].min - score, next: BAND_RANGES[i + 1].band };
+      return { needed: BAND_RANGES[i + 1].min - score, next: BAND_RANGES[i + 1].band + ' — ' + BAND_RANGES[i+1].title };
     }
   }
   return null;
+}
+function bandName(band) {
+  const names = { B6:'AM', B7:'Manager', B8:'Sr. Manager', B9:'GM', B10:'Director', B11:'AVP' };
+  return names[band] || band;
+}
+
+function toggleSummary() {
+  summaryOpen = !summaryOpen;
+  renderSummary();
 }
 
 function renderSummary() {
@@ -1157,11 +1403,6 @@ function renderGuidance(f, sel) {
     </div>`;
 }
 
-function bandName(band) {
-  const names = { B6:'AM', B7:'Manager', B8:'Sr. Manager', B9:'GM', B10:'Director', B11:'AVP' };
-  return names[band] || band;
-}
-
 function renderFactors() {
   const el = document.getElementById('factors');
   el.innerHTML = FACTORS.map(f => {
@@ -1237,16 +1478,7 @@ function resetAll() {
   render();
 }
 
-// Explainer toggle
-let explainerOpen = false;
-function toggleExplainer() {
-  explainerOpen = !explainerOpen;
-  document.getElementById('explainerBody').style.display = explainerOpen ? 'block' : 'none';
-  const tog = document.getElementById('explainerToggle');
-  tog.classList.toggle('open', explainerOpen);
-}
-
-// Sticky bar
+// ── Sticky bar ──
 function updateStickyBar() {
   const total = totalScore();
   const completed = completedCount();
@@ -1265,16 +1497,76 @@ function updateStickyBar() {
   }
 }
 
-// Show sticky bar once user scrolls past the page header
-const summaryAnchor = document.getElementById('summary');
 const stickyBar = document.getElementById('stickyBar');
 const scrollObserver = new IntersectionObserver(
-  ([entry]) => { stickyBar.classList.toggle('visible', !entry.isIntersecting); },
+  ([entry]) => {
+    if (activeTab === 'scorecard') stickyBar.classList.toggle('visible', !entry.isIntersecting);
+  },
   { threshold: 0, rootMargin: '0px' }
 );
 scrollObserver.observe(document.querySelector('.page-header'));
 
+// ── Competency Levels tab ──
+function renderBandSelector() {
+  const el = document.getElementById('bandSelector');
+  el.innerHTML = BAND_RANGES.map((b, i) =>
+    `<button class="band-pill-btn${i === selectedBandIdx ? ' active' : ''}" onclick="selectBand(${i})">
+      ${b.band} <span style="opacity:.65;font-weight:400;font-size:12px">${b.title}</span>
+    </button>`
+  ).join('');
+}
+
+function selectBand(idx) {
+  selectedBandIdx = idx;
+  renderBandSelector();
+  renderLevelView();
+}
+
+function renderLevelView() {
+  const b = BAND_RANGES[selectedBandIdx];
+  const el = document.getElementById('levelView');
+
+  const totalPts = FACTORS.reduce((a, f) => a + f.levels[selectedBandIdx].pts, 0);
+
+  const headerHtml = `<div class="level-header-card">
+    <div class="level-header-top">
+      <div class="level-header-band">${b.band} — ${b.title}</div>
+      <div style="display:inline-flex;align-items:center;gap:6px;background:var(--green-bg);border:0.5px solid var(--green-border);border-radius:20px;padding:3px 12px;font-size:12px;font-weight:500;color:var(--green-dark)">${totalPts} pts total</div>
+    </div>
+    <div class="level-header-range">IPE range: ${b.min === 0 ? '0' : b.min} – ${b.max > 500 ? b.min + '+' : b.max} points</div>
+  </div>`;
+
+  const cardsHtml = FACTORS.map(f => {
+    const lv = f.levels[selectedBandIdx];
+    const pct = Math.round((lv.pts / f.levels[5].pts) * 100);
+    const behaviorsHtml = lv.behaviors.map(b => `<li>${b}</li>`).join('');
+    return `<div class="comp-card">
+      <div class="comp-card-header">
+        <div class="comp-card-icon" style="background:${f.iconBg};color:${f.iconColor}">${f.mercer[0]}</div>
+        <div class="comp-card-meta">
+          <div class="comp-card-name">${f.name}</div>
+          <div class="comp-card-sub">Mercer: ${f.mercer} &nbsp;·&nbsp; Weight: ${f.weight}%</div>
+        </div>
+        <div class="comp-card-pts" style="background:${f.pillBg};color:${f.pillColor}">${lv.pts} pts</div>
+      </div>
+      <div class="comp-card-body">
+        <div class="comp-level-label">${lv.label}</div>
+        <ul class="comp-behaviors">${behaviorsHtml}</ul>
+        <div class="score-bar-wrap" style="margin-top:10px">
+          <div class="score-bar-bg"><div class="score-bar-fill" style="width:${pct}%"></div></div>
+          <div class="score-bar-labels"><span>${f.levels[0].pts} min</span><span>${f.levels[5].pts} max</span></div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  el.innerHTML = headerHtml + cardsHtml;
+}
+
+// ── Init ──
 render();
+renderBandSelector();
+renderLevelView();
 </script>
 </body>
 </html>
