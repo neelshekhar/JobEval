@@ -4,65 +4,96 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Swiggy Job Evaluation — IPE Framework</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
       --bg: #ffffff;
-      --bg-secondary: #f7f6f3;
-      --bg-tertiary: #f0ede8;
+      --bg-secondary: #f2f0ec;
+      --bg-tertiary: #fdf5ee;       /* Instamart Salt */
       --text-primary: #1a1a18;
       --text-secondary: #5c5b57;
       --text-tertiary: #8c8b85;
-      --border: rgba(0,0,0,0.10);
-      --border-md: rgba(0,0,0,0.18);
+      --border: rgba(0,0,0,0.09);
+      --border-md: rgba(0,0,0,0.16);
       --radius-md: 8px;
       --radius-lg: 12px;
-      --green: #1D9E75;
-      --green-bg: #E1F5EE;
-      --green-border: #5DCAA5;
-      --green-text: #085041;
-      --green-dark: #0F6E56;
+      /* Instamart Blue — primary brand colour */
+      --brand: #0050ff;
+      --brand-bg: #e6edff;
+      --brand-border: #7da8ff;
+      --brand-text: #003acc;
+      --brand-dark: #002699;
+      /* Aliases (used widely in existing classes) */
+      --green: #0050ff;
+      --green-bg: #e6edff;
+      --green-border: #7da8ff;
+      --green-text: #003acc;
+      --green-dark: #002699;
+      /* Swiggy Orange — accent / action */
+      --orange: #ff5200;
+      --orange-bg: #fff2ec;
+      --orange-border: #ffa882;
+      --orange-dark: #cc4200;
+      /* Fluorescent Blue — CTA buttons */
+      --fluor: #a4fffd;
     }
 
     @media (prefers-color-scheme: dark) {
       :root {
-        --bg: #1c1c1a;
-        --bg-secondary: #252523;
-        --bg-tertiary: #2e2e2b;
+        --bg: #13151f;
+        --bg-secondary: #1a1d2e;
+        --bg-tertiary: #1e2035;
         --text-primary: #f0ede8;
         --text-secondary: #a8a69f;
         --text-tertiary: #6e6d68;
-        --border: rgba(255,255,255,0.10);
-        --border-md: rgba(255,255,255,0.18);
-        --green-bg: #0a2e21;
-        --green-border: #0F6E56;
-        --green-text: #9FE1CB;
-        --green-dark: #5DCAA5;
+        --border: rgba(255,255,255,0.09);
+        --border-md: rgba(255,255,255,0.17);
+        --green-bg: #001452;
+        --green-border: #003acc;
+        --green-text: #7da8ff;
+        --green-dark: #a4c2ff;
+        --orange-bg: #2a1100;
+        --orange-border: #cc4200;
+        --orange-dark: #ffa882;
       }
     }
 
     html { font-size: 16px; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
       background: var(--bg-tertiary);
       color: var(--text-primary);
       min-height: 100vh;
       padding: 2rem 1rem 4rem;
       line-height: 1.6;
+      border-top: 3px solid var(--orange);
     }
 
     .container { max-width: 720px; margin: 0 auto; }
 
+    /* ─── Page header ─── */
     .page-header { margin-bottom: 1.5rem; }
-    .page-label {
-      font-size: 11px; text-transform: uppercase; letter-spacing: .08em;
-      color: var(--text-tertiary); margin-bottom: 6px;
+    .page-header-inner {
+      display: flex; align-items: center; gap: 14px; margin-bottom: 0;
     }
-    .page-title { font-size: 24px; font-weight: 500; color: var(--text-primary); margin-bottom: 6px; }
+    .spin-logo {
+      flex-shrink: 0; width: 42px; height: 42px;
+    }
+    .page-label {
+      font-size: 11px; text-transform: uppercase; letter-spacing: .09em;
+      color: var(--orange); font-weight: 600; margin-bottom: 4px;
+    }
+    .page-title {
+      font-size: 22px; font-weight: 800; color: var(--text-primary);
+      letter-spacing: -.01em; line-height: 1.2;
+    }
 
-    /* Tab navigation */
+    /* ─── Tab nav ─── */
     .tab-nav {
       display: flex; gap: 2px;
       background: var(--bg-secondary);
@@ -77,7 +108,7 @@
       padding: 8px 14px;
       border: none; border-radius: var(--radius-md);
       background: transparent;
-      font-family: inherit; font-size: 13px;
+      font-family: 'Montserrat', inherit; font-size: 12.5px; font-weight: 500;
       color: var(--text-secondary);
       cursor: pointer; white-space: nowrap;
       transition: all .15s;
@@ -86,7 +117,7 @@
     .tab-btn:hover { color: var(--text-primary); background: var(--bg-tertiary); }
     .tab-btn.active {
       background: var(--bg);
-      color: var(--text-primary); font-weight: 500;
+      color: var(--brand); font-weight: 700;
       box-shadow: 0 1px 4px rgba(0,0,0,0.08);
     }
 
@@ -102,28 +133,29 @@
       margin-bottom: 12px;
     }
     .je-section-label {
-      font-size: 10px; text-transform: uppercase; letter-spacing: .08em;
-      font-weight: 600; color: var(--text-tertiary); margin-bottom: 10px;
+      font-size: 10px; text-transform: uppercase; letter-spacing: .09em;
+      font-weight: 700; color: var(--orange); margin-bottom: 8px;
     }
     .je-section-title {
-      font-size: 16px; font-weight: 500; color: var(--text-primary); margin-bottom: 8px;
+      font-size: 15px; font-weight: 700; color: var(--text-primary); margin-bottom: 8px;
     }
     .je-text {
-      font-size: 13.5px; color: var(--text-secondary); line-height: 1.75; margin-bottom: 10px;
+      font-size: 13px; color: var(--text-secondary); line-height: 1.75; margin-bottom: 10px;
+      font-weight: 400;
     }
     .je-text:last-child { margin-bottom: 0; }
     .je-callout {
-      background: var(--green-bg);
-      border-left: 2px solid var(--green-border);
+      background: var(--brand-bg);
+      border-left: 3px solid var(--brand-border);
       padding: 10px 14px;
       border-radius: 0 var(--radius-md) var(--radius-md) 0;
       margin: 12px 0;
     }
     .je-callout-label {
       font-size: 10px; text-transform: uppercase; letter-spacing: .07em;
-      font-weight: 600; color: var(--green-dark); margin-bottom: 4px;
+      font-weight: 700; color: var(--brand-dark); margin-bottom: 4px;
     }
-    .je-callout-text { font-size: 13px; color: var(--green-text); line-height: 1.65; }
+    .je-callout-text { font-size: 13px; color: var(--brand-text); line-height: 1.65; font-weight: 400; }
     .je-method-grid {
       display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 10px 0;
     }
@@ -132,46 +164,37 @@
       border-radius: var(--radius-md);
       padding: 12px 14px;
     }
-    .je-method-name { font-size: 12px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; }
+    .je-method-name { font-size: 12px; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; }
     .je-method-tag {
       display: inline-block;
       font-size: 10px; padding: 2px 7px;
       border-radius: 10px; margin-bottom: 6px;
-      font-weight: 500;
+      font-weight: 600;
     }
-    .je-method-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.55; }
+    .je-method-desc { font-size: 11.5px; color: var(--text-secondary); line-height: 1.55; font-weight: 400; }
 
     .je-table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 12.5px; }
     .je-table th {
-      text-align: left; font-size: 10px; text-transform: uppercase; letter-spacing: .06em;
-      color: var(--text-tertiary); font-weight: 600;
+      text-align: left; font-size: 10px; text-transform: uppercase; letter-spacing: .07em;
+      color: var(--text-tertiary); font-weight: 700;
       padding: 6px 10px; border-bottom: 0.5px solid var(--border);
     }
     .je-table td {
       padding: 7px 10px; color: var(--text-secondary);
       border-bottom: 0.5px solid var(--border); vertical-align: top; line-height: 1.5;
+      font-weight: 400; font-size: 12px;
     }
     .je-table tr:last-child td { border-bottom: none; }
-    .je-table td:first-child { font-weight: 500; color: var(--text-primary); white-space: nowrap; }
+    .je-table td:first-child { font-weight: 600; color: var(--text-primary); white-space: nowrap; }
     .je-table td.center { text-align: center; }
 
-    .factor-pill {
-      display: inline-flex; align-items: center; gap: 5px;
-      padding: 4px 10px; border-radius: 20px;
-      font-size: 12px; font-weight: 500; margin: 3px 3px 3px 0;
-    }
+    .band-visual { display: flex; flex-direction: column; gap: 5px; margin: 10px 0; }
+    .band-row { display: flex; align-items: center; gap: 10px; }
+    .band-row-label { font-size: 11.5px; font-weight: 700; color: var(--text-primary); width: 34px; flex-shrink: 0; }
+    .band-row-track { height: 6px; border-radius: 3px; }
+    .band-row-info { font-size: 11px; color: var(--text-secondary); font-weight: 400; }
 
-    .band-visual {
-      display: flex; flex-direction: column; gap: 4px; margin: 10px 0;
-    }
-    .band-row {
-      display: flex; align-items: center; gap: 10px;
-    }
-    .band-row-label { font-size: 12px; font-weight: 600; color: var(--text-primary); width: 32px; flex-shrink: 0; }
-    .band-row-track { flex: 1; height: 6px; border-radius: 3px; }
-    .band-row-info { font-size: 11px; color: var(--text-secondary); }
-
-    /* ─── Scorecard tab (existing) ─── */
+    /* ─── Scorecard ─── */
     .summary-card {
       background: var(--bg-secondary);
       border-radius: var(--radius-lg);
@@ -187,41 +210,40 @@
     }
     .sc-header:hover { background: var(--bg-tertiary); }
     .sc-score-block { display: flex; align-items: baseline; gap: 4px; flex-shrink: 0; }
-    .sc-score { font-size: 26px; font-weight: 500; color: var(--text-primary); line-height: 1; }
-    .sc-score-max { font-size: 13px; color: var(--text-tertiary); }
+    .sc-score { font-size: 26px; font-weight: 800; color: var(--text-primary); line-height: 1; }
+    .sc-score-max { font-size: 13px; color: var(--text-tertiary); font-weight: 400; }
     .sc-chips { display: flex; align-items: center; gap: 6px; flex: 1; flex-wrap: wrap; }
     .sc-band-chip {
       display: inline-flex; align-items: center;
       background: var(--green-bg); border: 0.5px solid var(--green-border);
       border-radius: 20px; padding: 3px 12px;
-      font-size: 12px; color: var(--green-dark); font-weight: 500;
+      font-size: 12px; color: var(--green-dark); font-weight: 600;
     }
     .sc-next-chip {
       display: inline-flex; align-items: center; gap: 4px;
       background: var(--bg-tertiary); border: 0.5px solid var(--border-md);
       border-radius: 20px; padding: 3px 10px;
-      font-size: 11px; color: var(--text-tertiary);
+      font-size: 11px; color: var(--text-tertiary); font-weight: 500;
     }
     .sc-progress-wrap { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
     .sc-progress-track { width: 56px; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
-    .sc-progress-fill { height: 100%; border-radius: 2px; background: var(--green); transition: width .3s; }
-    .sc-progress-label { font-size: 11px; color: var(--text-tertiary); white-space: nowrap; }
+    .sc-progress-fill { height: 100%; border-radius: 2px; background: var(--brand); transition: width .3s; }
+    .sc-progress-label { font-size: 11px; color: var(--text-tertiary); white-space: nowrap; font-weight: 500; }
     .sc-toggle { font-size: 10px; color: var(--text-tertiary); transition: transform .2s; margin-left: auto; flex-shrink: 0; }
     .sc-toggle.open { transform: rotate(180deg); }
     .sc-body { padding: 0 14px 14px; border-top: 0.5px solid var(--border); }
     .sc-factor-row { display: flex; align-items: center; gap: 10px; margin-bottom: 7px; }
-    .sc-factor-name { font-size: 12px; color: var(--text-secondary); width: 160px; flex-shrink: 0; }
+    .sc-factor-name { font-size: 12px; color: var(--text-secondary); width: 160px; flex-shrink: 0; font-weight: 500; }
     .sc-bar-bg { flex: 1; height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; }
-    .sc-bar-fill { height: 100%; border-radius: 3px; background: var(--green); transition: width .35s; }
+    .sc-bar-fill { height: 100%; border-radius: 3px; background: var(--brand); transition: width .35s; }
     .sc-bar-fill.unscored { background: transparent; }
     .sc-bar-bg.unscored { background: repeating-linear-gradient(90deg, var(--border) 0, var(--border) 4px, transparent 4px, transparent 8px); }
-    .sc-factor-pts { font-size: 12px; color: var(--text-tertiary); width: 56px; text-align: right; flex-shrink: 0; }
+    .sc-factor-pts { font-size: 12px; color: var(--text-tertiary); width: 56px; text-align: right; flex-shrink: 0; font-weight: 500; }
     .sc-factor-pts.unscored { color: var(--border-md); }
 
-    .divider { height: 0.5px; background: var(--border); margin: 1rem 0; }
     .breakdown-label {
-      font-size: 11px; text-transform: uppercase; letter-spacing: .06em;
-      color: var(--text-tertiary); margin-bottom: 10px;
+      font-size: 10px; text-transform: uppercase; letter-spacing: .07em;
+      color: var(--text-tertiary); margin-bottom: 10px; font-weight: 700;
     }
     .radar-wrap { position: relative; width: 100%; height: 280px; margin: 1rem 0 0.5rem; }
 
@@ -242,17 +264,16 @@
     .factor-icon {
       width: 30px; height: 30px; border-radius: var(--radius-md);
       display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0; font-size: 13px; font-weight: 500;
+      flex-shrink: 0; font-size: 13px; font-weight: 700;
     }
     .factor-meta { flex: 1; min-width: 0; }
-    .factor-name { font-size: 14px; font-weight: 500; color: var(--text-primary); margin-bottom: 3px; }
-    .factor-swiggy { font-size: 12px; color: var(--text-tertiary); }
+    .factor-name { font-size: 13.5px; font-weight: 700; color: var(--text-primary); margin-bottom: 3px; }
+    .factor-swiggy { font-size: 11.5px; color: var(--text-tertiary); font-weight: 400; }
     .factor-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; }
     .score-pill {
-      font-size: 12px; font-weight: 500;
+      font-size: 12px; font-weight: 600;
       padding: 3px 10px; border-radius: 20px;
     }
-    .wt-pill { font-size: 11px; color: var(--text-tertiary); }
     .arrow {
       font-size: 10px; color: var(--text-tertiary);
       margin-left: 4px; display: inline-block; transition: transform .2s;
@@ -263,6 +284,7 @@
       font-size: 12.5px; color: var(--text-secondary);
       line-height: 1.65; padding: 10px 0 2px;
       border-bottom: 0.5px solid var(--border); margin-bottom: 2px;
+      font-weight: 400;
     }
     .level-grid {
       display: grid; grid-template-columns: repeat(6, 1fr);
@@ -275,84 +297,85 @@
       background: transparent;
       cursor: pointer;
       font-size: 11px; color: var(--text-secondary);
-      font-family: inherit;
+      font-family: 'Montserrat', inherit; font-weight: 500;
       text-align: center; line-height: 1.4;
       transition: all .15s;
     }
-    .level-btn:hover { border-color: var(--green); color: var(--green-dark); background: var(--green-bg); }
-    .level-btn.active { border-color: var(--green); background: var(--green-bg); color: var(--green-dark); font-weight: 500; }
+    .level-btn:hover { border-color: var(--brand); color: var(--brand-dark); background: var(--brand-bg); }
+    .level-btn.active { border-color: var(--brand); background: var(--brand-bg); color: var(--brand-dark); font-weight: 700; }
 
     .guidance-panel { margin-top: 4px; }
     .guidance-section { margin-bottom: 10px; }
     .guidance-label {
       font-size: 10px; text-transform: uppercase; letter-spacing: .07em;
-      color: var(--text-tertiary); margin-bottom: 6px; font-weight: 500;
+      color: var(--text-tertiary); margin-bottom: 6px; font-weight: 700;
     }
     .guidance-bullets {
-      list-style: none; padding: 0;
+      list-style: none; padding: 8px 12px;
       background: var(--bg-secondary);
       border-radius: var(--radius-md);
-      padding: 8px 12px;
     }
     .guidance-bullets li {
       font-size: 12.5px; color: var(--text-secondary);
-      padding: 3px 0 3px 16px; position: relative; line-height: 1.55;
+      padding: 3px 0 3px 16px; position: relative; line-height: 1.55; font-weight: 400;
     }
     .guidance-bullets li::before { content: '–'; position: absolute; left: 0; color: var(--text-tertiary); }
 
+    /* Orange for action / next-step callouts */
     .shift-box {
-      background: var(--green-bg);
-      border-left: 2px solid var(--green-border);
+      background: var(--orange-bg);
+      border-left: 3px solid var(--orange-border);
       padding: 10px 12px;
       border-radius: 0 var(--radius-md) var(--radius-md) 0;
       margin-top: 8px;
     }
     .shift-label {
       font-size: 10px; text-transform: uppercase; letter-spacing: .07em;
-      color: var(--green-dark); margin-bottom: 5px; font-weight: 600;
+      color: var(--orange-dark); margin-bottom: 5px; font-weight: 700;
     }
-    .shift-text { font-size: 12.5px; color: var(--green-text); line-height: 1.65; font-style: italic; }
+    .shift-text { font-size: 12.5px; color: var(--orange-dark); line-height: 1.65; font-style: italic; font-weight: 400; }
     .next-bullets { list-style: none; padding: 0; margin-top: 8px; }
     .next-bullets li {
-      font-size: 12px; color: var(--green-text);
-      padding: 2px 0 2px 18px; position: relative; line-height: 1.5;
+      font-size: 12px; color: var(--orange-dark);
+      padding: 2px 0 2px 18px; position: relative; line-height: 1.5; font-weight: 400;
     }
-    .next-bullets li::before { content: '→'; position: absolute; left: 0; color: var(--green); font-size: 11px; line-height: 1.5; }
+    .next-bullets li::before { content: '→'; position: absolute; left: 0; color: var(--orange); font-size: 11px; line-height: 1.5; }
     .top-level-note { font-size: 12px; color: var(--text-tertiary); font-style: italic; padding: 8px 0; }
     .empty-guidance { font-size: 12px; color: var(--text-tertiary); font-style: italic; padding: 10px 0; }
 
     .score-bar-wrap { margin-top: 12px; }
     .score-bar-bg { height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
-    .score-bar-fill { height: 100%; border-radius: 2px; background: var(--green); transition: width .35s ease; }
+    .score-bar-fill { height: 100%; border-radius: 2px; background: var(--brand); transition: width .35s ease; }
     .score-bar-labels {
       display: flex; justify-content: space-between; margin-top: 4px;
-      font-size: 11px; color: var(--text-tertiary);
+      font-size: 11px; color: var(--text-tertiary); font-weight: 500;
     }
 
     .cta-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 1.5rem; }
     .btn-primary {
       padding: 10px 22px; border: none; border-radius: var(--radius-md);
-      background: var(--green); color: white;
-      font-size: 14px; cursor: pointer; font-family: inherit; font-weight: 500;
+      background: var(--fluor); color: var(--brand-dark);
+      font-size: 13px; cursor: pointer;
+      font-family: 'Montserrat', inherit; font-weight: 700;
       transition: opacity .15s;
     }
-    .btn-primary:hover { opacity: .88; }
+    .btn-primary:hover { opacity: .85; }
     .btn-sec {
       padding: 10px 18px; border: 0.5px solid var(--border-md);
       border-radius: var(--radius-md); background: transparent;
-      color: var(--text-secondary); font-size: 14px; cursor: pointer;
-      font-family: inherit; transition: background .15s;
+      color: var(--text-secondary); font-size: 13px; cursor: pointer;
+      font-family: 'Montserrat', inherit; font-weight: 500; transition: background .15s;
     }
     .btn-sec:hover { background: var(--bg-secondary); }
 
     /* Sticky score bar */
     .sticky-bar {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      position: fixed; top: 3px; left: 0; right: 0; z-index: 100;
       background: var(--bg);
       border-bottom: 0.5px solid var(--border-md);
       padding: 8px 1rem;
       display: flex; align-items: center; justify-content: center;
-      transform: translateY(-100%);
+      transform: translateY(-110%);
       transition: transform .25s ease;
       box-shadow: 0 2px 12px rgba(0,0,0,0.08);
     }
@@ -361,18 +384,19 @@
       max-width: 720px; width: 100%;
       display: flex; align-items: center; justify-content: space-between; gap: 12px;
     }
-    .sticky-left { display: flex; align-items: baseline; gap: 6px; }
-    .sticky-score { font-size: 20px; font-weight: 500; color: var(--text-primary); }
-    .sticky-max { font-size: 12px; color: var(--text-tertiary); }
+    .sticky-left { display: flex; align-items: center; gap: 8px; }
+    .sticky-logo { width: 24px; height: 24px; flex-shrink: 0; }
+    .sticky-score { font-size: 18px; font-weight: 800; color: var(--text-primary); }
+    .sticky-max { font-size: 12px; color: var(--text-tertiary); font-weight: 400; }
     .sticky-band {
-      font-size: 12px; font-weight: 500; color: var(--green-dark);
-      background: var(--green-bg); border: 0.5px solid var(--green-border);
+      font-size: 12px; font-weight: 600; color: var(--brand-dark);
+      background: var(--brand-bg); border: 0.5px solid var(--brand-border);
       border-radius: 20px; padding: 3px 10px;
     }
     .sticky-progress { display: flex; align-items: center; gap: 8px; }
     .sticky-progress-track { width: 80px; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
-    .sticky-progress-fill { height: 100%; border-radius: 2px; background: var(--green); transition: width .3s; }
-    .sticky-progress-label { font-size: 11px; color: var(--text-tertiary); }
+    .sticky-progress-fill { height: 100%; border-radius: 2px; background: var(--brand); transition: width .3s; }
+    .sticky-progress-label { font-size: 11px; color: var(--text-tertiary); font-weight: 500; }
 
     /* ─── Competency Levels tab ─── */
     .band-selector {
@@ -383,16 +407,15 @@
       border: 0.5px solid var(--border-md);
       border-radius: 20px;
       background: var(--bg);
-      font-family: inherit; font-size: 13px;
+      font-family: 'Montserrat', inherit; font-size: 12.5px; font-weight: 500;
       color: var(--text-secondary);
       cursor: pointer; transition: all .15s;
     }
-    .band-pill-btn:hover { border-color: var(--green); color: var(--green-dark); background: var(--green-bg); }
-    .band-pill-btn.active { border-color: var(--green); background: var(--green-bg); color: var(--green-dark); font-weight: 600; }
+    .band-pill-btn:hover { border-color: var(--brand); color: var(--brand-dark); background: var(--brand-bg); }
+    .band-pill-btn.active { border-color: var(--brand); background: var(--brand-bg); color: var(--brand-dark); font-weight: 700; }
 
     .level-header-card {
-      background: var(--bg);
-      border: 0.5px solid var(--border);
+      background: var(--brand);
       border-radius: var(--radius-lg);
       padding: 16px 18px;
       margin-bottom: 12px;
@@ -400,9 +423,14 @@
     .level-header-top {
       display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 6px;
     }
-    .level-header-band { font-size: 22px; font-weight: 500; color: var(--text-primary); }
-    .level-header-title { font-size: 15px; color: var(--text-secondary); }
-    .level-header-range { font-size: 12px; color: var(--text-tertiary); margin-top: 2px; }
+    .level-header-band { font-size: 22px; font-weight: 800; color: #ffffff; }
+    .level-header-title { font-size: 15px; color: rgba(255,255,255,0.80); font-weight: 500; }
+    .level-header-range { font-size: 12px; color: rgba(255,255,255,0.60); font-weight: 400; margin-top: 2px; }
+    .level-pts-chip {
+      display: inline-flex; align-items: center;
+      background: var(--fluor); border-radius: 20px; padding: 3px 12px;
+      font-size: 12px; font-weight: 700; color: var(--brand-dark);
+    }
 
     .comp-card {
       background: var(--bg);
@@ -418,13 +446,13 @@
     .comp-card-icon {
       width: 30px; height: 30px; border-radius: var(--radius-md);
       display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0; font-size: 13px; font-weight: 500;
+      flex-shrink: 0; font-size: 13px; font-weight: 700;
     }
     .comp-card-meta { flex: 1; min-width: 0; }
-    .comp-card-name { font-size: 14px; font-weight: 500; color: var(--text-primary); margin-bottom: 2px; }
-    .comp-card-sub { font-size: 11px; color: var(--text-tertiary); }
+    .comp-card-name { font-size: 13.5px; font-weight: 700; color: var(--text-primary); margin-bottom: 2px; }
+    .comp-card-sub { font-size: 11px; color: var(--text-tertiary); font-weight: 400; }
     .comp-card-pts {
-      font-size: 13px; font-weight: 500;
+      font-size: 12.5px; font-weight: 700;
       padding: 3px 10px; border-radius: 20px; flex-shrink: 0;
     }
     .comp-card-body {
@@ -433,32 +461,28 @@
     }
     .comp-level-label {
       font-size: 12.5px; color: var(--text-secondary);
-      font-style: italic; padding: 8px 0 6px; line-height: 1.5;
+      font-style: italic; padding: 8px 0 6px; line-height: 1.5; font-weight: 400;
     }
     .comp-behaviors {
-      list-style: none; padding: 0;
+      list-style: none; padding: 8px 12px;
       background: var(--bg-secondary);
       border-radius: var(--radius-md);
-      padding: 8px 12px;
       margin-top: 4px;
     }
     .comp-behaviors li {
       font-size: 12.5px; color: var(--text-secondary);
-      padding: 3px 0 3px 16px; position: relative; line-height: 1.55;
+      padding: 3px 0 3px 16px; position: relative; line-height: 1.55; font-weight: 400;
     }
     .comp-behaviors li::before { content: '–'; position: absolute; left: 0; color: var(--text-tertiary); }
 
-    .scorecard-note {
-      font-size: 12px; color: var(--text-tertiary);
-      padding: 10px 14px;
-      background: var(--bg-secondary);
-      border-radius: var(--radius-md);
-      margin-bottom: 12px;
+    .tab-intro {
+      font-size: 13px; color: var(--text-secondary); margin-bottom: 1.25rem;
+      line-height: 1.7; font-weight: 400;
     }
 
     .footer {
       text-align: center; margin-top: 3rem;
-      font-size: 12px; color: var(--text-tertiary);
+      font-size: 11.5px; color: var(--text-tertiary); font-weight: 500;
     }
 
     @media (max-width: 540px) {
@@ -471,10 +495,15 @@
 </head>
 <body>
 
-<!-- Sticky score bar (scorecard tab only) -->
+<!-- Sticky score bar -->
 <div class="sticky-bar" id="stickyBar">
   <div class="sticky-inner">
     <div class="sticky-left">
+      <svg class="sticky-logo" viewBox="0 0 100 100">
+        <rect x="8" y="8" width="84" height="84" rx="22" fill="#0050ff"/>
+        <path d="M 63,30 C 56,24 38,24 34,34 C 30,42 38,48 50,52 C 62,56 70,62 66,70 C 62,78 44,78 37,72"
+              stroke="white" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      </svg>
       <span class="sticky-score" id="stickyScore">0</span>
       <span class="sticky-max" id="stickyMax">/ 486</span>
       <span class="sticky-band" id="stickyBand" style="display:none"></span>
@@ -488,24 +517,31 @@
 
 <div class="container">
 
+  <!-- Page header with S-pin logo -->
   <div class="page-header">
-    <div class="page-label">Swiggy · Job evaluation</div>
-    <h1 class="page-title">Mercer IPE Framework</h1>
+    <div class="page-header-inner">
+      <svg class="spin-logo" viewBox="0 0 100 100">
+        <rect x="8" y="8" width="84" height="84" rx="22" fill="#0050ff"/>
+        <path d="M 63,30 C 56,24 38,24 34,34 C 30,42 38,48 50,52 C 62,56 70,62 66,70 C 62,78 44,78 37,72"
+              stroke="white" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      </svg>
+      <div>
+        <div class="page-label">Swiggy · Job Evaluation</div>
+        <h1 class="page-title">Mercer IPE Framework</h1>
+      </div>
+    </div>
   </div>
 
-  <!-- Tab navigation -->
+  <!-- Tab navigation: JE | Competency Levels | IPE Scorecard -->
   <div class="tab-nav" role="tablist">
     <button class="tab-btn" id="tab-je" onclick="switchTab('je')" role="tab">What is JE?</button>
-    <button class="tab-btn active" id="tab-scorecard" onclick="switchTab('scorecard')" role="tab">IPE Scorecard</button>
     <button class="tab-btn" id="tab-levels" onclick="switchTab('levels')" role="tab">Competency Levels</button>
+    <button class="tab-btn active" id="tab-scorecard" onclick="switchTab('scorecard')" role="tab">IPE Scorecard</button>
   </div>
 
-  <!-- ══════════════════════════════════════════
-       TAB 1: Job Evaluation Explainer
-  ══════════════════════════════════════════ -->
+  <!-- ══ TAB 1: Job Evaluation Explainer ══ -->
   <div class="tab-panel" id="panel-je">
 
-    <!-- What is JE -->
     <div class="je-section">
       <div class="je-section-label">Foundations</div>
       <div class="je-section-title">What is Job Evaluation?</div>
@@ -513,11 +549,10 @@
       <p class="je-text">The output is a score (or grade) that positions the role on a scale, making it possible to compare roles across functions, geographies, and even companies. This creates a consistent foundation for decisions about compensation, career architecture, and levelling.</p>
       <div class="je-callout">
         <div class="je-callout-label">Key distinction</div>
-        <div class="je-callout-text">JE evaluates the <strong>role</strong>, not the person in it. Two people at the same role get the same JE score — regardless of performance or tenure. A promotion means the <em>role's scope has permanently shifted</em>, not just that the person has worked hard.</div>
+        <div class="je-callout-text">JE evaluates the <strong>role</strong>, not the person in it. Two people in the same role get the same JE score — regardless of performance or tenure. A promotion means the <em>role's scope has permanently shifted</em>, not just that the person has worked hard.</div>
       </div>
     </div>
 
-    <!-- Why companies use JE -->
     <div class="je-section">
       <div class="je-section-label">Purpose</div>
       <div class="je-section-title">Why do companies use Job Evaluation?</div>
@@ -535,7 +570,6 @@
       </table>
     </div>
 
-    <!-- Methodologies -->
     <div class="je-section">
       <div class="je-section-label">Methodologies</div>
       <div class="je-section-title">Common JE approaches</div>
@@ -543,28 +577,27 @@
       <div class="je-method-grid">
         <div class="je-method-card">
           <div class="je-method-name">Point-Factor</div>
-          <span class="je-method-tag" style="background:#E1F5EE;color:#085041">Most common</span>
-          <p class="je-method-desc">Roles are scored on multiple factors (e.g. scope, complexity, accountability). Scores are summed into a total point value. Mercer IPE and Hay Group use this approach.</p>
+          <span class="je-method-tag" style="background:#e6edff;color:#002699">Most common</span>
+          <p class="je-method-desc">Roles are scored on multiple factors. Scores are summed into a total point value. Mercer IPE and Hay Group use this approach.</p>
         </div>
         <div class="je-method-card">
           <div class="je-method-name">Job Ranking</div>
-          <span class="je-method-tag" style="background:#F0EDE8;color:#5c5b57">Simple</span>
+          <span class="je-method-tag" style="background:#f2f0ec;color:#5c5b57">Simple</span>
           <p class="je-method-desc">Roles are ranked from largest to smallest based on overall perceived value. Fast but highly subjective — hard to defend at scale.</p>
         </div>
         <div class="je-method-card">
           <div class="je-method-name">Job Classification</div>
-          <span class="je-method-tag" style="background:#F0EDE8;color:#5c5b57">Grade-based</span>
+          <span class="je-method-tag" style="background:#f2f0ec;color:#5c5b57">Grade-based</span>
           <p class="je-method-desc">Predefined grade descriptions are created, and jobs are slotted into the closest matching grade. Common in government and public sector.</p>
         </div>
         <div class="je-method-card">
           <div class="je-method-name">Factor Comparison</div>
-          <span class="je-method-tag" style="background:#F0EDE8;color:#5c5b57">Hybrid</span>
-          <p class="je-method-desc">A hybrid of ranking and point-factor. Benchmark jobs are ranked on individual factors, then used to score other roles. Technically rigorous but rarely used today.</p>
+          <span class="je-method-tag" style="background:#f2f0ec;color:#5c5b57">Hybrid</span>
+          <p class="je-method-desc">A hybrid of ranking and point-factor. Benchmark jobs are ranked on individual factors, then used to score other roles.</p>
         </div>
       </div>
     </div>
 
-    <!-- Mercer IPE deep dive -->
     <div class="je-section">
       <div class="je-section-label">Mercer IPE</div>
       <div class="je-section-title">International Position Evaluation — how it works</div>
@@ -573,7 +606,6 @@
         <div class="je-callout-label">Why IPE?</div>
         <div class="je-callout-text">Because IPE is global and standardised, Swiggy's internal grades can be directly mapped to Mercer's annual remuneration survey — enabling true market benchmarking. A B9 at Swiggy is genuinely comparable to a similar-scored role at any other participating company.</div>
       </div>
-
       <div style="margin-top:14px">
         <div class="je-section-label" style="margin-bottom:8px">The 5 IPE factors</div>
         <table class="je-table">
@@ -582,27 +614,27 @@
           </thead>
           <tbody>
             <tr>
-              <td><span style="display:inline-flex;align-items:center;gap:6px"><span style="width:22px;height:22px;border-radius:6px;background:#E1F5EE;color:#085041;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:600">I</span> Impact</span></td>
+              <td><span style="display:inline-flex;align-items:center;gap:6px"><span style="width:22px;height:22px;border-radius:6px;background:#E1F5EE;color:#085041;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700">I</span> Impact</span></td>
               <td>Scope of accountability, autonomy, and whether outcomes are owned vs. contributed to</td>
               <td class="center">25%</td>
             </tr>
             <tr>
-              <td><span style="display:inline-flex;align-items:center;gap:6px"><span style="width:22px;height:22px;border-radius:6px;background:#EEEDFE;color:#3C3489;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:600">N</span> Innovation</span></td>
+              <td><span style="display:inline-flex;align-items:center;gap:6px"><span style="width:22px;height:22px;border-radius:6px;background:#EEEDFE;color:#3C3489;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700">N</span> Innovation</span></td>
               <td>Degree of complexity and creativity required; how independently problems are identified and solved</td>
               <td class="center">20%</td>
             </tr>
             <tr>
-              <td><span style="display:inline-flex;align-items:center;gap:6px"><span style="width:22px;height:22px;border-radius:6px;background:#FAECE7;color:#712B13;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:600">C</span> Communication</span></td>
+              <td><span style="display:inline-flex;align-items:center;gap:6px"><span style="width:22px;height:22px;border-radius:6px;background:#FAECE7;color:#712B13;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700">C</span> Communication</span></td>
               <td>Breadth and level of influence; whether the role shapes decisions or just conveys information</td>
               <td class="center">20%</td>
             </tr>
             <tr>
-              <td><span style="display:inline-flex;align-items:center;gap:6px"><span style="width:22px;height:22px;border-radius:6px;background:#E6F1FB;color:#0C447C;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:600">P</span> People</span></td>
+              <td><span style="display:inline-flex;align-items:center;gap:6px"><span style="width:22px;height:22px;border-radius:6px;background:#E6F1FB;color:#0C447C;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700">P</span> People</span></td>
               <td>Whether the role develops, coaches, or builds organisational capability beyond its own output</td>
               <td class="center">20%</td>
             </tr>
             <tr>
-              <td><span style="display:inline-flex;align-items:center;gap:6px"><span style="width:22px;height:22px;border-radius:6px;background:#FAEEDA;color:#633806;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:600">K</span> Knowledge</span></td>
+              <td><span style="display:inline-flex;align-items:center;gap:6px"><span style="width:22px;height:22px;border-radius:6px;background:#FAEEDA;color:#633806;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700">K</span> Knowledge</span></td>
               <td>Depth and breadth of domain expertise; how much of the role's value comes from what it knows</td>
               <td class="center">15%</td>
             </tr>
@@ -611,7 +643,6 @@
       </div>
     </div>
 
-    <!-- Band mapping -->
     <div class="je-section">
       <div class="je-section-label">Grade mapping</div>
       <div class="je-section-title">How IPE points map to Swiggy bands</div>
@@ -629,24 +660,22 @@
           <tr><td>370+</td><td>B11</td><td>AVP</td><td>Leads a function; shapes BU strategy; SVP-level influence; culture carrier</td></tr>
         </tbody>
       </table>
-
       <div class="band-visual" style="margin-top:16px">
-        <div style="font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--text-tertiary);margin-bottom:6px">Point range by band (max 486 pts)</div>
-        <div class="band-row"><div class="band-row-label">B6</div><div class="band-row-track" style="background:#1D9E75;width:37%"></div><div class="band-row-info">0–179</div></div>
-        <div class="band-row"><div class="band-row-label">B7</div><div class="band-row-track" style="background:#1D9E75;width:45%"></div><div class="band-row-info">180–219</div></div>
-        <div class="band-row"><div class="band-row-label">B8</div><div class="band-row-track" style="background:#1D9E75;width:55%"></div><div class="band-row-info">220–269</div></div>
-        <div class="band-row"><div class="band-row-label">B9</div><div class="band-row-track" style="background:#1D9E75;width:66%"></div><div class="band-row-info">270–319</div></div>
-        <div class="band-row"><div class="band-row-label">B10</div><div class="band-row-track" style="background:#1D9E75;width:76%"></div><div class="band-row-info">320–369</div></div>
-        <div class="band-row"><div class="band-row-label">B11</div><div class="band-row-track" style="background:#1D9E75;width:100%"></div><div class="band-row-info">370+</div></div>
+        <div style="font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:var(--text-tertiary);font-weight:700;margin-bottom:6px">Point range by band (max 486 pts)</div>
+        <div class="band-row"><div class="band-row-label">B6</div><div class="band-row-track" style="background:#0050ff;width:37%"></div><div class="band-row-info">0–179</div></div>
+        <div class="band-row"><div class="band-row-label">B7</div><div class="band-row-track" style="background:#0050ff;width:45%"></div><div class="band-row-info">180–219</div></div>
+        <div class="band-row"><div class="band-row-label">B8</div><div class="band-row-track" style="background:#0050ff;width:55%"></div><div class="band-row-info">220–269</div></div>
+        <div class="band-row"><div class="band-row-label">B9</div><div class="band-row-track" style="background:#0050ff;width:66%"></div><div class="band-row-info">270–319</div></div>
+        <div class="band-row"><div class="band-row-label">B10</div><div class="band-row-track" style="background:#0050ff;width:76%"></div><div class="band-row-info">320–369</div></div>
+        <div class="band-row"><div class="band-row-label">B11</div><div class="band-row-track" style="background:#0050ff;width:100%"></div><div class="band-row-info">370+</div></div>
       </div>
     </div>
 
-    <!-- Why it matters for promotions -->
     <div class="je-section">
       <div class="je-section-label">Promotion context</div>
       <div class="je-section-title">Why JE matters for promotion decisions</div>
       <p class="je-text">JE scores make promotion conversations more objective. A promotion isn't just a title change — it's a claim that the role's scope, complexity, and accountability have permanently shifted upward across most dimensions.</p>
-      <p class="je-text">If your IPE score lands in the next band, it validates that the role has genuinely grown, not just that the person has worked hard in their current one. This is why calibration committees look at IPE scores alongside performance: they are asking whether the <em>seat</em> has grown, not just the person sitting in it.</p>
+      <p class="je-text">If your IPE score lands in the next band, it validates that the role has genuinely grown, not just that the person has worked hard in their current one. Calibration committees look at IPE scores alongside performance: they are asking whether the <em>seat</em> has grown, not just the person sitting in it.</p>
       <div class="je-callout">
         <div class="je-callout-label">Practical implication</div>
         <div class="je-callout-text">Use the IPE Scorecard tab to score your current role. If most of your factor scores already sit in the next band, that's a strong signal your scope has grown and a promotion conversation is warranted. If only one or two factors are elevated, the role hasn't fully shifted — keep building the others.</div>
@@ -656,35 +685,21 @@
   </div><!-- /panel-je -->
 
 
-  <!-- ══════════════════════════════════════════
-       TAB 2: IPE Scorecard
-  ══════════════════════════════════════════ -->
+  <!-- ══ TAB 2: Competency Levels ══ -->
+  <div class="tab-panel" id="panel-levels">
+    <p class="tab-intro">Select a band to see what is expected across all five competencies at that level — as a standalone expectation, not a comparison to the next level.</p>
+    <div class="band-selector" id="bandSelector"></div>
+    <div id="levelView"></div>
+  </div><!-- /panel-levels -->
+
+
+  <!-- ══ TAB 3: IPE Scorecard ══ -->
   <div class="tab-panel active" id="panel-scorecard">
-    <div style="font-size:13.5px;color:var(--text-secondary);margin-bottom:1.25rem;line-height:1.65">
-      Rate yourself on each of the five competencies. Select a band to see what's expected at that level and what shifts are needed to reach the next one.
-    </div>
+    <p class="tab-intro">Rate yourself on each of the five competencies. Select a band to see what's expected at that level and what shifts are needed to reach the next one.</p>
     <div id="summary"></div>
     <div id="factors"></div>
     <div id="cta"></div>
   </div><!-- /panel-scorecard -->
-
-
-  <!-- ══════════════════════════════════════════
-       TAB 3: Competency Levels
-  ══════════════════════════════════════════ -->
-  <div class="tab-panel" id="panel-levels">
-    <div style="font-size:13.5px;color:var(--text-secondary);margin-bottom:1.25rem;line-height:1.65">
-      Select a band to see what is expected across all five competencies at that level — as a standalone expectation, not a comparison to the next level.
-    </div>
-
-    <div class="band-selector" id="bandSelector">
-      <!-- rendered by JS -->
-    </div>
-
-    <div id="levelView">
-      <!-- rendered by JS -->
-    </div>
-  </div><!-- /panel-levels -->
 
   <div class="footer">Swiggy Levelling Framework &nbsp;·&nbsp; Mercer IPE methodology</div>
 </div>
@@ -704,101 +719,42 @@ const FACTORS = [
       {
         band: "B6", pts: 40,
         label: "Executes tasks in sub-function; routine supervision; predictable outcomes",
-        behaviors: [
-          "Executes from a given playbook",
-          "Understands metrics in own area",
-          "Follows SOPs; meets quality and timelines",
-          "Identifies snags and asks for help",
-          "Escalates problems rather than solving independently"
-        ],
+        behaviors: ["Executes from a given playbook","Understands metrics in own area","Follows SOPs; meets quality and timelines","Identifies snags and asks for help","Escalates problems rather than solving independently"],
         shift: "From following direction to generating direction. At AM, the problem and method are handed to you. At Manager, you are expected to notice problems yourself and propose how to fix them — without being asked.",
-        nextBehaviors: [
-          "Tracks metrics and spots new problems",
-          "Proposes changes to SOPs",
-          "Creates plans with estimated resources and contingencies",
-          "Keeps stakeholders updated proactively"
-        ]
+        nextBehaviors: ["Tracks metrics and spots new problems","Proposes changes to SOPs","Creates plans with estimated resources and contingencies","Keeps stakeholders updated proactively"]
       },
       {
         band: "B7", pts: 52,
         label: "Plans & executes charter goals; broad supervision; accountable for specific outcomes",
-        behaviors: [
-          "Tracks metrics and spots new problems",
-          "Proposes changes to SOPs",
-          "Creates plans with estimated resources and contingencies",
-          "Monitors progress through dashboards and check-ins",
-          "Keeps stakeholders updated proactively"
-        ],
+        behaviors: ["Tracks metrics and spots new problems","Proposes changes to SOPs","Creates plans with estimated resources and contingencies","Monitors progress through dashboards and check-ins","Keeps stakeholders updated proactively"],
         shift: "From completing tasks to planning and managing delivery. AM executes what is scoped. Manager scopes the work, estimates what it needs, and owns the rhythm of delivery. The jump to Senior Manager means raising the bar for a whole team's output — rewriting the playbook when it's broken.",
-        nextBehaviors: [
-          "Independently breaks down problems using business insights and user data",
-          "Creates and reviews team plans with timely decisions",
-          "Revises SOPs and playbooks",
-          "Highlights execution gaps and escalates with urgency"
-        ]
+        nextBehaviors: ["Independently breaks down problems using business insights and user data","Creates and reviews team plans with timely decisions","Revises SOPs and playbooks","Highlights execution gaps and escalates with urgency"]
       },
       {
         band: "B8", pts: 66,
         label: "Manages multiple projects; directional supervision; impacts revenues/cost/efficiency",
-        behaviors: [
-          "Independently breaks down problems using business insights and user data",
-          "Aware of key competitors and Swiggy's USP",
-          "Creates and reviews team plans with timely decisions",
-          "Revises SOPs and playbooks",
-          "Highlights execution gaps and escalates with urgency"
-        ],
+        behaviors: ["Independently breaks down problems using business insights and user data","Aware of key competitors and Swiggy's USP","Creates and reviews team plans with timely decisions","Revises SOPs and playbooks","Highlights execution gaps and escalates with urgency"],
         shift: "From managing execution quality to owning outcomes completely. Senior Manager improves how things run. GM is accountable for whether the charter delivers — and does not wait for follow-up from above to fix what's slipping.",
-        nextBehaviors: [
-          "Owns performance outcomes end-to-end",
-          "Guides teams proactively — minimal follow-up needed",
-          "Drives accountability across all stakeholders"
-        ]
+        nextBehaviors: ["Owns performance outcomes end-to-end","Guides teams proactively — minimal follow-up needed","Drives accountability across all stakeholders"]
       },
       {
         band: "B9", pts: 82,
         label: "Owns strategic charters; limited guidance; directly impacts BU/CF AOP goals",
-        behaviors: [
-          "Infers patterns and root causes from varied data; high judgment",
-          "Defines and prioritises problems — right a lot, even with incomplete data",
-          "Owns performance outcomes end-to-end",
-          "Guides teams proactively — minimal follow-up needed",
-          "Drives accountability across all stakeholders"
-        ],
+        behaviors: ["Infers patterns and root causes from varied data; high judgment","Defines and prioritises problems — right a lot, even with incomplete data","Owns performance outcomes end-to-end","Guides teams proactively — minimal follow-up needed","Drives accountability across all stakeholders"],
         shift: "From owning a charter's execution to owning its direction. GM executes against a strategy set with leadership input. Director independently decides the roadmap — anticipating how every move affects adjacent teams, planning 6+ months out.",
-        nextBehaviors: [
-          "Independently creates and changes roadmap with full inter-dependency view",
-          "Puts right systems and processes in place to optimise speed, quality, cost",
-          "Sets the execution standard; evolves governance mechanisms"
-        ]
+        nextBehaviors: ["Independently creates and changes roadmap with full inter-dependency view","Puts right systems and processes in place to optimise speed, quality, cost","Sets the execution standard; evolves governance mechanisms"]
       },
       {
         band: "B10", pts: 100,
         label: "Owns sub-function end-to-end; independent; sets execution standard across the org",
-        behaviors: [
-          "Independently creates and changes roadmap with full inter-dependency view",
-          "Puts right systems and processes in place to optimise speed, quality, cost",
-          "Makes right trade-off between quick fix and sustainable solution",
-          "Sets the execution standard; evolves governance mechanisms",
-          "Drives accountability across all stakeholders; leverages technology"
-        ],
+        behaviors: ["Independently creates and changes roadmap with full inter-dependency view","Puts right systems and processes in place to optimise speed, quality, cost","Makes right trade-off between quick fix and sustainable solution","Sets the execution standard; evolves governance mechanisms","Drives accountability across all stakeholders; leverages technology"],
         shift: "From owning a sub-function's roadmap to setting the function's annual strategy. Director thinks deeply within their domain. AVP zooms out to the entire BU, connects how every sub-function interacts, and owns the strategy that ties it all together.",
-        nextBehaviors: [
-          "Connects dots across the BU to arrive at annual function strategy",
-          "Clarifies goals and success metrics across departments",
-          "Identifies and avoids execution derailers ahead of time",
-          "Modifies goals and takes stretch targets independently; shows complete ownership"
-        ]
+        nextBehaviors: ["Connects dots across the BU to arrive at annual function strategy","Clarifies goals and success metrics across departments","Identifies and avoids execution derailers ahead of time","Modifies goals and takes stretch targets independently; shows complete ownership"]
       },
       {
         band: "B11", pts: 120,
         label: "Leads function; shapes BU strategy; full ownership of functional P&L and direction",
-        behaviors: [
-          "Connects dots across the BU to arrive at annual function strategy",
-          "Preempts interaction effects of own projects on other functions",
-          "Clarifies goals and success metrics across departments",
-          "Identifies and avoids execution derailers ahead of time",
-          "Modifies goals and takes stretch targets independently; shows complete ownership"
-        ],
+        behaviors: ["Connects dots across the BU to arrive at annual function strategy","Preempts interaction effects of own projects on other functions","Clarifies goals and success metrics across departments","Identifies and avoids execution derailers ahead of time","Modifies goals and takes stretch targets independently; shows complete ownership"],
         shift: null
       }
     ]
@@ -816,92 +772,42 @@ const FACTORS = [
       {
         band: "B6", pts: 32,
         label: "Routine, defined problems; low ambiguity; escalates rather than solves",
-        behaviors: [
-          "Shares ideas in brainstorms",
-          "Converts ideas to solutions with guidance",
-          "Works on routine, well-defined problems",
-          "Escalates to manager when stuck rather than proposing a solution"
-        ],
+        behaviors: ["Shares ideas in brainstorms","Converts ideas to solutions with guidance","Works on routine, well-defined problems","Escalates to manager when stuck rather than proposing a solution"],
         shift: "From contributing ideas to owning improvements. AM participates when others create the forum. Manager independently spots what could be better and drives the change — without needing to be asked.",
-        nextBehaviors: [
-          "Suggests better ways to do things in own area",
-          "Comes up with customised, creative solutions",
-          "Proposes solutions to defined, non-routine problems"
-        ]
+        nextBehaviors: ["Suggests better ways to do things in own area","Comes up with customised, creative solutions","Proposes solutions to defined, non-routine problems"]
       },
       {
         band: "B7", pts: 42,
         label: "Defined, non-routine problems; proposes solutions within own area",
-        behaviors: [
-          "Suggests better ways to do things in own area",
-          "Comes up with customised, creative solutions",
-          "Handles defined, non-routine problems independently",
-          "Proposes process improvements without being asked"
-        ],
+        behaviors: ["Suggests better ways to do things in own area","Comes up with customised, creative solutions","Handles defined, non-routine problems independently","Proposes process improvements without being asked"],
         shift: "From fixing what's in front of you to learning from outside and bringing it in. Manager solves with what they know. Senior Manager scans the industry, experiments with new approaches, and shares the learning — even when it fails.",
-        nextBehaviors: [
-          "Suggests process improvements drawing from industry best practices",
-          "Experiments, fails fast, and shares learnings openly",
-          "Brings new structural approaches to ongoing challenges"
-        ]
+        nextBehaviors: ["Suggests process improvements drawing from industry best practices","Experiments, fails fast, and shares learnings openly","Brings new structural approaches to ongoing challenges"]
       },
       {
         band: "B8", pts: 54,
         label: "Varied, non-routine; independently decomposes using data and user insight",
-        behaviors: [
-          "Suggests process improvements drawing from industry best practices",
-          "Experiments, fails fast, and shares learnings openly",
-          "Brings new structural approaches to ongoing challenges",
-          "Decomposes varied, non-routine problems independently"
-        ],
+        behaviors: ["Suggests process improvements drawing from industry best practices","Experiments, fails fast, and shares learnings openly","Brings new structural approaches to ongoing challenges","Decomposes varied, non-routine problems independently"],
         shift: "From experimenting within your charter to questioning whether the charter itself is right. Senior Manager innovates within the frame. GM challenges the frame — asking if the current way of working is even the right one.",
-        nextBehaviors: [
-          "Continuously relooks at team processes against external benchmarks",
-          "Maximises impact with minimal resources (DMWL mindset)",
-          "Identifies trajectory-changing opportunities; challenges the status quo"
-        ]
+        nextBehaviors: ["Continuously relooks at team processes against external benchmarks","Maximises impact with minimal resources (DMWL mindset)","Identifies trajectory-changing opportunities; challenges the status quo"]
       },
       {
         band: "B9", pts: 68,
         label: "High ambiguity; defines & prioritises problems; right a lot with incomplete data",
-        behaviors: [
-          "Continuously relooks at team processes against external benchmarks",
-          "Maximises own impact with minimal resources (DMWL mindset)",
-          "Identifies trajectory-changing opportunities; challenges the status quo",
-          "Makes high-judgment calls on ambiguous, high-stakes problems"
-        ],
+        behaviors: ["Continuously relooks at team processes against external benchmarks","Maximises own impact with minimal resources (DMWL mindset)","Identifies trajectory-changing opportunities; challenges the status quo","Makes high-judgment calls on ambiguous, high-stakes problems"],
         shift: "From personally driving innovation to building a culture of it. GM is the source of new ideas. Director creates conditions where the whole team generates ideas — and knows how to filter which ones are worth scaling.",
-        nextBehaviors: [
-          "Proactively drives and nudges others on continuous improvement",
-          "Fosters an innovation ecosystem — team actively shares ideas",
-          "Guides ideas through cost, replicability, and scalability filters"
-        ]
+        nextBehaviors: ["Proactively drives and nudges others on continuous improvement","Fosters an innovation ecosystem — team actively shares ideas","Guides ideas through cost, replicability, and scalability filters"]
       },
       {
         band: "B10", pts: 82,
         label: "Very high ambiguity; creates roadmap with full inter-dependency view; 6+ month horizon",
-        behaviors: [
-          "Proactively drives and nudges others on continuous improvement",
-          "Fosters an innovation ecosystem — team actively shares ideas",
-          "Guides ideas through cost, replicability, and scalability filters",
-          "Independently creates and changes roadmap with full inter-dependency view"
-        ],
+        behaviors: ["Proactively drives and nudges others on continuous improvement","Fosters an innovation ecosystem — team actively shares ideas","Guides ideas through cost, replicability, and scalability filters","Independently creates and changes roadmap with full inter-dependency view"],
         shift: "From fostering innovation within the function to redefining what the function could be. Director pushes the team to improve what exists. AVP questions whether the existing model is right — drawing from outside the industry to imagine fundamentally different possibilities.",
-        nextBehaviors: [
-          "Applies beginner's mindset — questions existing notions and assumptions",
-          "Brings outside-in perspectives from unrelated fields",
-          "Advocates unprecedented, futuristic approaches in products, processes, business models"
-        ]
+        nextBehaviors: ["Applies beginner's mindset — questions existing notions and assumptions","Brings outside-in perspectives from unrelated fields","Advocates unprecedented, futuristic approaches in products, processes, business models"]
       },
       {
         band: "B11", pts: 100,
         label: "Extreme ambiguity; derives problems from BU strategy; long-term BU implications",
-        behaviors: [
-          "Applies beginner's mindset — questions existing notions and assumptions",
-          "Thinks outside swim lane; brings outside-in perspectives from unrelated fields",
-          "Advocates unprecedented, futuristic approach in products, processes, business models",
-          "Questions whether the current way of working is even the right one at a BU level"
-        ],
+        behaviors: ["Applies beginner's mindset — questions existing notions and assumptions","Thinks outside swim lane; brings outside-in perspectives from unrelated fields","Advocates unprecedented, futuristic approach in products, processes, business models","Questions whether the current way of working is even the right one at a BU level"],
         shift: null
       }
     ]
@@ -919,92 +825,42 @@ const FACTORS = [
       {
         band: "B6", pts: 30,
         label: "Shares info with peers; respectful; expresses views when asked",
-        behaviors: [
-          "Shares relevant info with peers",
-          "Respectful in conflict",
-          "Expresses own views and asks questions when prompted",
-          "Responds when asked; does not proactively push information"
-        ],
+        behaviors: ["Shares relevant info with peers","Respectful in conflict","Expresses own views and asks questions when prompted","Responds when asked; does not proactively push information"],
         shift: "From reactive sharing to proactive stakeholder management. AM responds when asked. Manager anticipates what stakeholders need to know and surfaces it with data — without being prompted.",
-        nextBehaviors: [
-          "Regular comms with stakeholders with minimal guidance",
-          "Voices disagreement and commits when persuaded",
-          "Surfaces data-backed insights proactively"
-        ]
+        nextBehaviors: ["Regular comms with stakeholders with minimal guidance","Voices disagreement and commits when persuaded","Surfaces data-backed insights proactively"]
       },
       {
         band: "B7", pts: 40,
         label: "Proactive stakeholder updates; surfaces data-backed insights; voices disagreement",
-        behaviors: [
-          "Regular comms with stakeholders with minimal guidance",
-          "Voices disagreement and commits when persuaded",
-          "Surfaces data-backed insights proactively",
-          "Anticipates what stakeholders need to know before being asked"
-        ],
+        behaviors: ["Regular comms with stakeholders with minimal guidance","Voices disagreement and commits when persuaded","Surfaces data-backed insights proactively","Anticipates what stakeholders need to know before being asked"],
         shift: "From informing stakeholders to influencing them. Manager keeps people updated. Senior Manager builds the trust and credibility to change minds and unblock decisions across functions.",
-        nextBehaviors: [
-          "Builds credibility via constructive dialogues",
-          "Influences cross-functional stakeholders (with some support)",
-          "Actively resolves conflicts — doesn't avoid them"
-        ]
+        nextBehaviors: ["Builds credibility via constructive dialogues","Influences cross-functional stakeholders (with some support)","Actively resolves conflicts — doesn't avoid them"]
       },
       {
         band: "B8", pts: 52,
         label: "Builds credibility via dialogue; influences cross-functionally with some support",
-        behaviors: [
-          "Builds credibility via constructive dialogues",
-          "Influences cross-functional stakeholders with some support from manager",
-          "Actively resolves conflicts — doesn't avoid them",
-          "Changes minds and unblocks decisions across functions"
-        ],
+        behaviors: ["Builds credibility via constructive dialogues","Influences cross-functional stakeholders with some support from manager","Actively resolves conflicts — doesn't avoid them","Changes minds and unblocks decisions across functions"],
         shift: "From influencing with support to influencing independently. Senior Manager can move stakeholders but may need a manager's backing. GM walks into any room and gets alignment on their own credibility.",
-        nextBehaviors: [
-          "Builds trust through expectation-setting and proactive misses comms",
-          "Independently influences internal and cross-functional stakeholders",
-          "Articulates problems and solutions clearly in proposals"
-        ]
+        nextBehaviors: ["Builds trust through expectation-setting and proactive misses comms","Independently influences internal and cross-functional stakeholders","Articulates problems and solutions clearly in proposals"]
       },
       {
         band: "B9", pts: 64,
         label: "Fully independent internal & cross-functional influence; walks in with credibility",
-        behaviors: [
-          "Builds trust through expectation-setting and proactive misses comms",
-          "Independently influences internal and cross-functional stakeholders",
-          "Articulates problems and solutions clearly in proposals and forums",
-          "Walks into any room and gets alignment on own credibility — no manager backing needed"
-        ],
+        behaviors: ["Builds trust through expectation-setting and proactive misses comms","Independently influences internal and cross-functional stakeholders","Articulates problems and solutions clearly in proposals and forums","Walks into any room and gets alignment on own credibility — no manager backing needed"],
         shift: "From influencing peers and cross-functional partners to influencing leaders. GM aligns people at their own level. Director has the credibility and communication craft to move VP-level decisions independently.",
-        nextBehaviors: [
-          "Successfully influences VP-level leaders to align and deliver on priorities",
-          "Nurtures formal and informal stakeholder relationships actively",
-          "Fosters respectful comms culture; mentors team on conflict resolution"
-        ]
+        nextBehaviors: ["Successfully influences VP-level leaders to align and deliver on priorities","Nurtures formal and informal stakeholder relationships actively","Fosters respectful comms culture; mentors team on conflict resolution"]
       },
       {
         band: "B10", pts: 78,
         label: "Influences VP-level leaders independently; mentors team on conflict resolution",
-        behaviors: [
-          "Successfully influences VP-level leaders to align and deliver on priorities",
-          "Nurtures formal and informal stakeholder relationships actively",
-          "Fosters respectful comms culture; mentors team on conflict resolution",
-          "Moves VP-level decisions independently, without manager backing"
-        ],
+        behaviors: ["Successfully influences VP-level leaders to align and deliver on priorities","Nurtures formal and informal stakeholder relationships actively","Fosters respectful comms culture; mentors team on conflict resolution","Moves VP-level decisions independently, without manager backing"],
         shift: "From aligning stakeholders to shaping organisational direction. Director gets VP-level buy-in. AVP is in the room where strategy is set — building narratives that move SVPs and external partners at the highest level.",
-        nextBehaviors: [
-          "Pulls entire org toward shared vision — not just down the hierarchy",
-          "Influences SVPs and external parties independently",
-          "Crafts narratives for senior leadership; surfaces PoV in leadership forums"
-        ]
+        nextBehaviors: ["Pulls entire org toward shared vision — not just down the hierarchy","Influences SVPs and external parties independently","Crafts narratives for senior leadership; surfaces PoV in leadership forums"]
       },
       {
         band: "B11", pts: 94,
         label: "Influences SVPs & external parties; crafts narratives for senior leadership forums",
-        behaviors: [
-          "Pulls entire org toward shared vision — not just down the hierarchy",
-          "Influences SVPs and external parties independently",
-          "Crafts narratives for senior leadership; surfaces PoV in leadership forums",
-          "Shapes organisational direction through communication at the highest level"
-        ],
+        behaviors: ["Pulls entire org toward shared vision — not just down the hierarchy","Influences SVPs and external parties independently","Crafts narratives for senior leadership; surfaces PoV in leadership forums","Shapes organisational direction through communication at the highest level"],
         shift: null
       }
     ]
@@ -1022,92 +878,42 @@ const FACTORS = [
       {
         band: "B6", pts: 28,
         label: "Invests in own growth; supports teammates; participates in hiring if applicable",
-        behaviors: [
-          "Supports teammates; checks in on tasks",
-          "Invests primarily in own growth",
-          "Participates in hiring if applicable",
-          "Focus is on personal development"
-        ],
+        behaviors: ["Supports teammates; checks in on tasks","Invests primarily in own growth","Participates in hiring if applicable","Focus is on personal development"],
         shift: "From investing in self to investing in others. AM focuses on their own development. Manager is responsible for the output and growth of the people around them.",
-        nextBehaviors: [
-          "Delegates with clear expectations and check-ins",
-          "Coaches through knowledge sharing",
-          "Identifies skill gaps and addresses them in the team"
-        ]
+        nextBehaviors: ["Delegates with clear expectations and check-ins","Coaches through knowledge sharing","Identifies skill gaps and addresses them in the team"]
       },
       {
         band: "B7", pts: 38,
         label: "Delegates with expectations; coaches via knowledge-sharing; addresses skill gaps",
-        behaviors: [
-          "Delegates with clear expectations and check-ins",
-          "Coaches through knowledge sharing",
-          "Identifies skill gaps and addresses them",
-          "Takes responsibility for the output and growth of people around them"
-        ],
+        behaviors: ["Delegates with clear expectations and check-ins","Coaches through knowledge sharing","Identifies skill gaps and addresses them","Takes responsibility for the output and growth of people around them"],
         shift: "From generic people management to individualised talent development. Manager delegates and coaches broadly. Senior Manager diagnoses each person's specific gaps and designs targeted interventions.",
-        nextBehaviors: [
-          "Maintains hiring bar actively",
-          "Motivates through retention and comp challenges",
-          "Designs targeted development plans for each team member"
-        ]
+        nextBehaviors: ["Maintains hiring bar actively","Motivates through retention and comp challenges","Designs targeted development plans for each team member"]
       },
       {
         band: "B8", pts: 50,
         label: "Owns hiring bar; targeted dev plans per person; motivates through challenges",
-        behaviors: [
-          "Maintains hiring bar actively",
-          "Motivates through retention and comp challenges",
-          "Designs targeted development plans for each team member",
-          "Diagnoses each person's specific gaps; individualised coaching — not generic"
-        ],
+        behaviors: ["Maintains hiring bar actively","Motivates through retention and comp challenges","Designs targeted development plans for each team member","Diagnoses each person's specific gaps; individualised coaching — not generic"],
         shift: "From developing individuals to shaping the team's future. Senior Manager works on people one at a time. GM thinks about org design, career trajectories, and whether the team is built for what's coming.",
-        nextBehaviors: [
-          "High hiring bar; avoids overstaffing; plans team careers",
-          "Sets clear performance expectations and holds teams accountable",
-          "Coaches and mentors; plans team careers actively"
-        ]
+        nextBehaviors: ["High hiring bar; avoids overstaffing; plans team careers","Sets clear performance expectations and holds teams accountable","Coaches and mentors; plans team careers actively"]
       },
       {
         band: "B9", pts: 62,
         label: "Org design mindset; plans team careers; coaches & mentors; avoids overstaffing",
-        behaviors: [
-          "High hiring bar; avoids overstaffing; plans team careers",
-          "Sets clear performance expectations and holds teams accountable",
-          "Coaches and mentors; plans team careers actively",
-          "Thinks about org design and whether the team is built for what's coming"
-        ],
+        behaviors: ["High hiring bar; avoids overstaffing; plans team careers","Sets clear performance expectations and holds teams accountable","Coaches and mentors; plans team careers actively","Thinks about org design and whether the team is built for what's coming"],
         shift: "From managing talent to multiplying it. GM builds strong individuals. Director creates an environment where those individuals develop the next generation — coaching cascades down, not just from the top.",
-        nextBehaviors: [
-          "Enables team members to lead projects and coach others",
-          "Maintains talent density; grooms successors; reduces single points of failure",
-          "Sets bar for hiring: quality, diversity, complementing skillsets"
-        ]
+        nextBehaviors: ["Enables team members to lead projects and coach others","Maintains talent density; grooms successors; reduces single points of failure","Sets bar for hiring: quality, diversity, complementing skillsets"]
       },
       {
         band: "B10", pts: 76,
         label: "Multiplies talent; grooms successors; enables team members to coach others",
-        behaviors: [
-          "Enables team members to lead projects and coach others",
-          "Maintains talent density; keen eye for high performance; grooms successors",
-          "Sets bar for hiring: quality, diversity, complementing skillsets",
-          "Creates an environment where coaching cascades down — not just from the top"
-        ],
+        behaviors: ["Enables team members to lead projects and coach others","Maintains talent density; keen eye for high performance; grooms successors","Sets bar for hiring: quality, diversity, complementing skillsets","Creates an environment where coaching cascades down — not just from the top"],
         shift: "From developing managers to attracting and building leaders. Director grows the people already in the team. AVP's reputation draws senior talent to the organisation — and they build teams resilient to future challenges, not just current ones.",
-        nextBehaviors: [
-          "Drives high performance with high psychological safety",
-          "Can attract Director-level talent independently",
-          "Builds future-proofed team: capability building, rotation, successors"
-        ]
+        nextBehaviors: ["Drives high performance with high psychological safety","Can attract Director-level talent independently","Builds future-proofed team: capability building, rotation, successors"]
       },
       {
         band: "B11", pts: 92,
         label: "Attracts Director-level talent; future-proofs org; drives high perf + psych safety",
-        behaviors: [
-          "Drives high performance with high psychological safety",
-          "Can attract Director-level talent independently",
-          "Builds future-proofed team: capability building, rotation, successors",
-          "Organisation is resilient to future challenges — not personality-dependent"
-        ],
+        behaviors: ["Drives high performance with high psychological safety","Can attract Director-level talent independently","Builds future-proofed team: capability building, rotation, successors","Organisation is resilient to future challenges — not personality-dependent"],
         shift: null
       }
     ]
@@ -1125,92 +931,42 @@ const FACTORS = [
       {
         band: "B6", pts: 24,
         label: "Understands own area metrics; applies given playbooks; stays current on basics",
-        behaviors: [
-          "Understands metrics in own area",
-          "Applies given playbooks",
-          "Stays current on basics within own function",
-          "Knowledge is scoped to immediate work area"
-        ],
+        behaviors: ["Understands metrics in own area","Applies given playbooks","Stays current on basics within own function","Knowledge is scoped to immediate work area"],
         shift: "From executing within a playbook to improving it. At AM, the playbook is given. At Manager, you are expected to understand customer preferences, competition, and industry trends well enough to propose changes.",
-        nextBehaviors: [
-          "Tracks metrics and spots new problems",
-          "Proposes changes to SOPs",
-          "Understands customer preferences, competition, and industry trends"
-        ]
+        nextBehaviors: ["Tracks metrics and spots new problems","Proposes changes to SOPs","Understands customer preferences, competition, and industry trends"]
       },
       {
         band: "B7", pts: 32,
         label: "Tracks competition, customer prefs, industry trends; proposes SOP changes",
-        behaviors: [
-          "Tracks metrics and spots new problems",
-          "Proposes changes to SOPs based on external knowledge",
-          "Understands customer preferences, competition, and industry trends",
-          "Goes beyond own area to understand the broader market"
-        ],
+        behaviors: ["Tracks metrics and spots new problems","Proposes changes to SOPs based on external knowledge","Understands customer preferences, competition, and industry trends","Goes beyond own area to understand the broader market"],
         shift: "From knowing your area to deeply understanding users and competitors. Manager understands trends. Senior Manager triangulates data, user insight, and business context to surface root causes others haven't seen.",
-        nextBehaviors: [
-          "Independently breaks down problems using business insights and user data",
-          "Aware of key competitors and Swiggy's USP in detail",
-          "Understands multiple user personas — stated and unstated needs"
-        ]
+        nextBehaviors: ["Independently breaks down problems using business insights and user data","Aware of key competitors and Swiggy's USP in detail","Understands multiple user personas — stated and unstated needs"]
       },
       {
         band: "B8", pts: 42,
         label: "Deep user persona understanding; knows USPs vs competitors; leverages industry data",
-        behaviors: [
-          "Independently breaks down problems using business insights and user data",
-          "Aware of key competitors and Swiggy's USP",
-          "Understands multiple user personas — stated and unstated needs",
-          "Triangulates data, user insight, and business context to surface root causes"
-        ],
+        behaviors: ["Independently breaks down problems using business insights and user data","Aware of key competitors and Swiggy's USP","Understands multiple user personas — stated and unstated needs","Triangulates data, user insight, and business context to surface root causes"],
         shift: "From understanding users to becoming the authority on them. Senior Manager knows the data. GM has such depth — in users, market, and org — that they are the go-to person when the team is stuck.",
-        nextBehaviors: [
-          "Infers patterns and root causes from varied data; high judgment",
-          "Defines and prioritises problems right, even with incomplete data",
-          "Brings emerging user insights consistently; places user at the centre"
-        ]
+        nextBehaviors: ["Infers patterns and root causes from varied data; high judgment","Defines and prioritises problems right, even with incomplete data","Brings emerging user insights consistently; places user at the centre"]
       },
       {
         band: "B9", pts: 54,
         label: "Tribal knowledge; go-to SME; infers patterns from varied data; emerging user insights",
-        behaviors: [
-          "Infers patterns and root causes from varied data; high judgment",
-          "Defines and prioritises problems right, even with incomplete data",
-          "Brings emerging user insights consistently; places user at the centre",
-          "Go-to SME when the team is stuck; deep tribal knowledge"
-        ],
+        behaviors: ["Infers patterns and root causes from varied data; high judgment","Defines and prioritises problems right, even with incomplete data","Brings emerging user insights consistently; places user at the centre","Go-to SME when the team is stuck; deep tribal knowledge"],
         shift: "From being the expert to owning the roadmap. GM has deep knowledge. Director uses that knowledge to independently create and change the roadmap — anticipating how decisions affect adjacent functions.",
-        nextBehaviors: [
-          "Independently creates and changes roadmap with full inter-dependency view",
-          "Thinks long-term (>6 months): emerging markets, changing demographics",
-          "Deep tribal knowledge spanning the sub-function and adjacent areas"
-        ]
+        nextBehaviors: ["Independently creates and changes roadmap with full inter-dependency view","Thinks long-term (>6 months): emerging markets, changing demographics","Deep tribal knowledge spanning the sub-function and adjacent areas"]
       },
       {
         band: "B10", pts: 66,
         label: "Long-term market thinking (>6 months); deep expertise across adjacent functions",
-        behaviors: [
-          "Independently creates and changes roadmap with full inter-dependency view",
-          "Thinks long-term (>6 months): emerging markets, changing demographics",
-          "Go-to SME when team is stuck; deep tribal knowledge",
-          "Anticipates how decisions affect adjacent functions"
-        ],
+        behaviors: ["Independently creates and changes roadmap with full inter-dependency view","Thinks long-term (>6 months): emerging markets, changing demographics","Go-to SME when team is stuck; deep tribal knowledge","Anticipates how decisions affect adjacent functions"],
         shift: "From deep domain expertise to BU-level strategic intelligence. Director knows their sub-function inside out. AVP connects how every sub-function within the BU interacts — and preempts the interaction effects before they become problems.",
-        nextBehaviors: [
-          "Connects dots across the BU to arrive at annual function strategy",
-          "Preempts interaction effects of own projects on other functions",
-          "High judgment — right a lot; intuition matches data; role-model end-user first"
-        ]
+        nextBehaviors: ["Connects dots across the BU to arrive at annual function strategy","Preempts interaction effects of own projects on other functions","High judgment — right a lot; intuition matches data; role-model end-user first"]
       },
       {
         band: "B11", pts: 80,
         label: "BU-level strategic knowledge; preempts interaction effects; futuristic outside-in view",
-        behaviors: [
-          "Connects dots across the BU to arrive at annual function strategy",
-          "Preempts interaction effects of own projects on other functions",
-          "High judgment — right a lot; intuition matches data; role-model end-user first",
-          "Knowledge spans the entire BU and connects to long-term strategic direction"
-        ],
+        behaviors: ["Connects dots across the BU to arrive at annual function strategy","Preempts interaction effects of own projects on other functions","High judgment — right a lot; intuition matches data; role-model end-user first","Knowledge spans the entire BU and connects to long-term strategic direction"],
         shift: null
       }
     ]
@@ -1226,31 +982,26 @@ const BAND_RANGES = [
   {band:"B11", title:"AVP",              min:370,  max:999}
 ];
 
-// ── State ──
 let selections = {};
 let expanded = {};
 FACTORS.forEach(f => { selections[f.id] = null; expanded[f.id] = false; });
 let radarChart = null;
 let summaryOpen = true;
 let activeTab = 'scorecard';
-let selectedBandIdx = 0; // default to B6 on levels tab
+let selectedBandIdx = 0;
 
-// ── Tab switching ──
 function switchTab(tab) {
   activeTab = tab;
-  ['je','scorecard','levels'].forEach(t => {
+  ['je','levels','scorecard'].forEach(t => {
     document.getElementById('tab-' + t).classList.toggle('active', t === tab);
     document.getElementById('panel-' + t).classList.toggle('active', t === tab);
   });
-  // sticky bar only relevant on scorecard
   const sb = document.getElementById('stickyBar');
   if (tab !== 'scorecard') sb.classList.remove('visible');
   if (tab === 'scorecard') updateStickyBar();
-  if (tab === 'levels') renderLevelView();
-  if (tab === 'levels') renderBandSelector();
+  if (tab === 'levels') { renderBandSelector(); renderLevelView(); }
 }
 
-// ── Scorecard helpers ──
 function totalScore() {
   return FACTORS.reduce((a, f) => a + (selections[f.id] !== null ? f.levels[selections[f.id]].pts : 0), 0);
 }
@@ -1263,9 +1014,8 @@ function getBand(score) {
 function nextBandInfo(score) {
   for (let i = 0; i < BAND_RANGES.length - 1; i++) {
     const b = BAND_RANGES[i];
-    if (score >= b.min && score <= b.max) {
-      return { needed: BAND_RANGES[i + 1].min - score, next: BAND_RANGES[i + 1].band + ' — ' + BAND_RANGES[i+1].title };
-    }
+    if (score >= b.min && score <= b.max)
+      return { needed: BAND_RANGES[i+1].min - score, next: BAND_RANGES[i+1].band + ' — ' + BAND_RANGES[i+1].title };
   }
   return null;
 }
@@ -1274,17 +1024,11 @@ function bandName(band) {
   return names[band] || band;
 }
 
-function toggleSummary() {
-  summaryOpen = !summaryOpen;
-  renderSummary();
-}
+function toggleSummary() { summaryOpen = !summaryOpen; renderSummary(); }
 
 function renderSummary() {
-  const total = totalScore();
-  const completed = completedCount();
-  const max = maxScore();
+  const total = totalScore(), completed = completedCount(), max = maxScore();
   const el = document.getElementById('summary');
-
   const bandLabel = completed > 0 ? getBand(total) : null;
   const nextInfo = bandLabel ? nextBandInfo(total) : null;
   const progPct = Math.round(completed / FACTORS.length * 100);
@@ -1292,47 +1036,38 @@ function renderSummary() {
   const bandChip = bandLabel
     ? `<span class="sc-band-chip">${bandLabel}</span>`
     : `<span class="sc-band-chip" style="background:var(--bg-tertiary);border-color:var(--border);color:var(--text-tertiary)">Not scored yet</span>`;
-
   const nextChip = nextInfo
     ? `<span class="sc-next-chip">+${nextInfo.needed} pts → ${nextInfo.next}</span>`
     : (bandLabel && !nextInfo ? `<span class="sc-next-chip">Top band reached</span>` : '');
 
   const factorRows = FACTORS.map(f => {
-    const sel = selections[f.id];
-    const scored = sel !== null;
+    const sel = selections[f.id], scored = sel !== null;
     const pts = scored ? f.levels[sel].pts : 0;
     const pct = scored ? Math.round((pts / f.levels[5].pts) * 100) : 0;
     return `<div class="sc-factor-row">
       <div class="sc-factor-name">${f.name}</div>
-      <div class="sc-bar-bg${scored ? '' : ' unscored'}"><div class="sc-bar-fill${scored ? '' : ' unscored'}" style="width:${pct}%"></div></div>
-      <div class="sc-factor-pts${scored ? '' : ' unscored'}">${scored ? pts + ' / ' + f.levels[5].pts : '—'}</div>
+      <div class="sc-bar-bg${scored?'':' unscored'}"><div class="sc-bar-fill${scored?'':' unscored'}" style="width:${pct}%"></div></div>
+      <div class="sc-factor-pts${scored?'':' unscored'}">${scored ? pts+' / '+f.levels[5].pts : '—'}</div>
     </div>`;
   }).join('');
 
   const radarSection = completed === FACTORS.length
-    ? `<div class="radar-wrap"><canvas id="radarChart" role="img" aria-label="Radar chart of IPE scores"></canvas></div>`
-    : `<div style="font-size:12px;color:var(--text-tertiary);font-style:italic;padding:8px 0">Radar chart appears when all 5 competencies are scored.</div>`;
+    ? `<div class="radar-wrap"><canvas id="radarChart" role="img" aria-label="Radar chart"></canvas></div>`
+    : `<div style="font-size:12px;color:var(--text-tertiary);font-style:italic;padding:8px 0;font-weight:400">Radar chart appears when all 5 competencies are scored.</div>`;
 
   el.innerHTML = `<div class="summary-card" style="padding:0">
     <div class="sc-header" onclick="toggleSummary()">
-      <div class="sc-score-block">
-        <span class="sc-score">${total}</span>
-        <span class="sc-score-max">/ ${max} pts</span>
-      </div>
-      <div class="sc-chips">
-        ${bandChip}
-        ${nextChip}
-      </div>
+      <div class="sc-score-block"><span class="sc-score">${total}</span><span class="sc-score-max">/ ${max} pts</span></div>
+      <div class="sc-chips">${bandChip}${nextChip}</div>
       <div class="sc-progress-wrap">
         <div class="sc-progress-track"><div class="sc-progress-fill" style="width:${progPct}%"></div></div>
         <span class="sc-progress-label">${completed}/${FACTORS.length}</span>
       </div>
-      <span class="sc-toggle${summaryOpen ? ' open' : ''}">&#9650;</span>
+      <span class="sc-toggle${summaryOpen?' open':''}">&#9650;</span>
     </div>
     ${summaryOpen ? `<div class="sc-body">
       <div class="breakdown-label" style="margin-top:4px;margin-bottom:8px">Factor breakdown</div>
-      ${factorRows}
-      ${radarSection}
+      ${factorRows}${radarSection}
     </div>` : ''}
   </div>`;
 
@@ -1349,24 +1084,17 @@ function renderSummary() {
         type: 'radar',
         data: {
           labels: FACTORS.map(f => f.name),
-          datasets: [{
-            label: 'Score (%)',
-            data,
-            borderColor: '#1D9E75',
-            backgroundColor: 'rgba(29,158,117,0.10)',
-            pointBackgroundColor: '#1D9E75',
-            pointRadius: 5,
-            borderWidth: 1.5
-          }]
+          datasets: [{ label: 'Score (%)', data,
+            borderColor: '#0050ff', backgroundColor: 'rgba(0,80,255,0.08)',
+            pointBackgroundColor: '#0050ff', pointRadius: 5, borderWidth: 1.5 }]
         },
         options: {
           responsive: true, maintainAspectRatio: false,
           plugins: { legend: { display: false } },
-          scales: { r: {
-            min: 0, max: 100,
+          scales: { r: { min: 0, max: 100,
             ticks: { display: false },
             grid: { color: 'rgba(136,135,128,0.15)' },
-            pointLabels: { font: { size: 11 } }
+            pointLabels: { font: { size: 11, family: 'Montserrat' } }
           }}
         }
       });
@@ -1375,60 +1103,46 @@ function renderSummary() {
 }
 
 function renderGuidance(f, sel) {
-  const lv = f.levels[sel];
-  const nextLevel = sel < f.levels.length - 1 ? f.levels[sel + 1] : null;
+  const lv = f.levels[sel], nextLevel = sel < f.levels.length - 1 ? f.levels[sel+1] : null;
   const pct = Math.round((lv.pts / f.levels[5].pts) * 100);
-
   const behaviorItems = lv.behaviors.map(b => `<li>${b}</li>`).join('');
-
   const shiftSection = lv.shift
     ? `<div class="shift-box">
-        <div class="shift-label">To reach ${nextLevel ? nextLevel.band + ' — ' + bandName(nextLevel.band) : 'next level'}</div>
+        <div class="shift-label">To reach ${nextLevel ? nextLevel.band+' — '+bandName(nextLevel.band) : 'next level'}</div>
         <div class="shift-text">${lv.shift}</div>
-        ${lv.nextBehaviors ? `<ul class="next-bullets">${lv.nextBehaviors.map(b => `<li>${b}</li>`).join('')}</ul>` : ''}
+        ${lv.nextBehaviors ? `<ul class="next-bullets">${lv.nextBehaviors.map(b=>`<li>${b}</li>`).join('')}</ul>` : ''}
       </div>`
     : `<div class="top-level-note">You are at the highest band (B11 — AVP). This is the ceiling of the levelling framework.</div>`;
-
-  return `
-    <div class="guidance-panel">
-      <div class="guidance-section">
-        <div class="guidance-label">At ${lv.band} you are expected to</div>
-        <ul class="guidance-bullets">${behaviorItems}</ul>
-      </div>
-      ${shiftSection}
+  return `<div class="guidance-panel">
+    <div class="guidance-section">
+      <div class="guidance-label">At ${lv.band} you are expected to</div>
+      <ul class="guidance-bullets">${behaviorItems}</ul>
     </div>
-    <div class="score-bar-wrap">
-      <div class="score-bar-bg"><div class="score-bar-fill" style="width:${pct}%"></div></div>
-      <div class="score-bar-labels"><span>${f.levels[0].pts} min</span><span>${f.levels[5].pts} max</span></div>
-    </div>`;
+    ${shiftSection}
+  </div>
+  <div class="score-bar-wrap">
+    <div class="score-bar-bg"><div class="score-bar-fill" style="width:${pct}%"></div></div>
+    <div class="score-bar-labels"><span>${f.levels[0].pts} min</span><span>${f.levels[5].pts} max</span></div>
+  </div>`;
 }
 
 function renderFactors() {
   const el = document.getElementById('factors');
   el.innerHTML = FACTORS.map(f => {
-    const sel = selections[f.id];
-    const isOpen = expanded[f.id];
+    const sel = selections[f.id], isOpen = expanded[f.id];
     const pts = sel !== null ? f.levels[sel].pts : null;
-
     const pill = pts !== null
       ? `<div class="score-pill" style="background:${f.pillBg};color:${f.pillColor}">${pts} pts &nbsp; ${f.levels[sel].band}</div>`
       : `<div class="score-pill" style="background:var(--bg-secondary);color:var(--text-tertiary)">Not scored</div>`;
-
     const levelBtns = f.levels.map((l, li) =>
       `<button class="level-btn${sel===li?' active':''}" onclick="selectLevel('${f.id}',${li})">
-        <div>${l.band}</div><div style="opacity:.7">${l.pts}pts</div>
-      </button>`
-    ).join('');
-
+        <div>${l.band}</div><div style="opacity:.65">${l.pts}pts</div>
+      </button>`).join('');
     const body = isOpen ? `<div class="factor-body">
       <p class="factor-definition">${f.definition}</p>
       <div class="level-grid">${levelBtns}</div>
-      ${sel !== null
-        ? renderGuidance(f, sel)
-        : `<div class="empty-guidance">Select a band above to see what's expected and what changes to reach the next level.</div>`
-      }
+      ${sel !== null ? renderGuidance(f, sel) : `<div class="empty-guidance">Select a band above to see what's expected and what changes to reach the next level.</div>`}
     </div>` : '';
-
     return `<div class="factor-card">
       <div class="factor-header${isOpen?' open':''}" onclick="toggleExpand('${f.id}')">
         <div class="factor-icon" style="background:${f.iconBg};color:${f.iconColor}">${f.mercer[0]}</div>
@@ -1445,101 +1159,61 @@ function renderFactors() {
 
 function renderCTA() {
   const el = document.getElementById('cta');
-  if (completedCount() === FACTORS.length) {
-    el.innerHTML = `<div class="cta-row">
-      <button class="btn-sec" onclick="resetAll()">Reset scores</button>
-    </div>`;
-  } else {
-    el.innerHTML = '';
-  }
+  el.innerHTML = completedCount() === FACTORS.length
+    ? `<div class="cta-row"><button class="btn-sec" onclick="resetAll()">Reset scores</button></div>`
+    : '';
 }
 
-function render() {
-  renderSummary();
-  renderFactors();
-  renderCTA();
-  updateStickyBar();
-}
+function render() { renderSummary(); renderFactors(); renderCTA(); updateStickyBar(); }
 
-function toggleExpand(id) {
-  expanded[id] = !expanded[id];
-  render();
-}
-
-function selectLevel(id, idx) {
-  selections[id] = idx;
-  expanded[id] = true;
-  render();
-}
-
+function toggleExpand(id) { expanded[id] = !expanded[id]; render(); }
+function selectLevel(id, idx) { selections[id] = idx; expanded[id] = true; render(); }
 function resetAll() {
   FACTORS.forEach(f => { selections[f.id] = null; expanded[f.id] = false; });
   if (radarChart) { radarChart.destroy(); radarChart = null; }
   render();
 }
 
-// ── Sticky bar ──
 function updateStickyBar() {
-  const total = totalScore();
-  const completed = completedCount();
-  const max = maxScore();
+  const total = totalScore(), completed = completedCount(), max = maxScore();
   document.getElementById('stickyScore').textContent = total;
   document.getElementById('stickyMax').textContent = '/ ' + max;
-  const pct = Math.round((completed / FACTORS.length) * 100);
-  document.getElementById('stickyFill').style.width = pct + '%';
+  document.getElementById('stickyFill').style.width = Math.round(completed/FACTORS.length*100) + '%';
   document.getElementById('stickyLabel').textContent = completed + ' / ' + FACTORS.length + ' scored';
   const bandEl = document.getElementById('stickyBand');
-  if (completed === FACTORS.length) {
-    bandEl.textContent = getBand(total);
-    bandEl.style.display = 'inline-flex';
-  } else {
-    bandEl.style.display = 'none';
-  }
+  if (completed === FACTORS.length) { bandEl.textContent = getBand(total); bandEl.style.display = 'inline-flex'; }
+  else bandEl.style.display = 'none';
 }
 
 const stickyBar = document.getElementById('stickyBar');
-const scrollObserver = new IntersectionObserver(
-  ([entry]) => {
-    if (activeTab === 'scorecard') stickyBar.classList.toggle('visible', !entry.isIntersecting);
-  },
-  { threshold: 0, rootMargin: '0px' }
-);
-scrollObserver.observe(document.querySelector('.page-header'));
+new IntersectionObserver(
+  ([entry]) => { if (activeTab === 'scorecard') stickyBar.classList.toggle('visible', !entry.isIntersecting); },
+  { threshold: 0 }
+).observe(document.querySelector('.page-header'));
 
-// ── Competency Levels tab ──
 function renderBandSelector() {
-  const el = document.getElementById('bandSelector');
-  el.innerHTML = BAND_RANGES.map((b, i) =>
-    `<button class="band-pill-btn${i === selectedBandIdx ? ' active' : ''}" onclick="selectBand(${i})">
-      ${b.band} <span style="opacity:.65;font-weight:400;font-size:12px">${b.title}</span>
+  document.getElementById('bandSelector').innerHTML = BAND_RANGES.map((b, i) =>
+    `<button class="band-pill-btn${i===selectedBandIdx?' active':''}" onclick="selectBand(${i})">
+      ${b.band} <span style="opacity:.65;font-weight:400;font-size:11px">${b.title}</span>
     </button>`
   ).join('');
 }
 
-function selectBand(idx) {
-  selectedBandIdx = idx;
-  renderBandSelector();
-  renderLevelView();
-}
+function selectBand(idx) { selectedBandIdx = idx; renderBandSelector(); renderLevelView(); }
 
 function renderLevelView() {
   const b = BAND_RANGES[selectedBandIdx];
-  const el = document.getElementById('levelView');
-
   const totalPts = FACTORS.reduce((a, f) => a + f.levels[selectedBandIdx].pts, 0);
-
   const headerHtml = `<div class="level-header-card">
     <div class="level-header-top">
       <div class="level-header-band">${b.band} — ${b.title}</div>
-      <div style="display:inline-flex;align-items:center;gap:6px;background:var(--green-bg);border:0.5px solid var(--green-border);border-radius:20px;padding:3px 12px;font-size:12px;font-weight:500;color:var(--green-dark)">${totalPts} pts total</div>
+      <span class="level-pts-chip">${totalPts} pts total</span>
     </div>
-    <div class="level-header-range">IPE range: ${b.min === 0 ? '0' : b.min} – ${b.max > 500 ? b.min + '+' : b.max} points</div>
+    <div class="level-header-range">IPE range: ${b.min === 0 ? '0' : b.min} – ${b.max > 500 ? b.min+'+ points' : b.max+' points'}</div>
   </div>`;
-
   const cardsHtml = FACTORS.map(f => {
     const lv = f.levels[selectedBandIdx];
     const pct = Math.round((lv.pts / f.levels[5].pts) * 100);
-    const behaviorsHtml = lv.behaviors.map(b => `<li>${b}</li>`).join('');
     return `<div class="comp-card">
       <div class="comp-card-header">
         <div class="comp-card-icon" style="background:${f.iconBg};color:${f.iconColor}">${f.mercer[0]}</div>
@@ -1551,7 +1225,7 @@ function renderLevelView() {
       </div>
       <div class="comp-card-body">
         <div class="comp-level-label">${lv.label}</div>
-        <ul class="comp-behaviors">${behaviorsHtml}</ul>
+        <ul class="comp-behaviors">${lv.behaviors.map(b=>`<li>${b}</li>`).join('')}</ul>
         <div class="score-bar-wrap" style="margin-top:10px">
           <div class="score-bar-bg"><div class="score-bar-fill" style="width:${pct}%"></div></div>
           <div class="score-bar-labels"><span>${f.levels[0].pts} min</span><span>${f.levels[5].pts} max</span></div>
@@ -1559,11 +1233,9 @@ function renderLevelView() {
       </div>
     </div>`;
   }).join('');
-
-  el.innerHTML = headerHtml + cardsHtml;
+  document.getElementById('levelView').innerHTML = headerHtml + cardsHtml;
 }
 
-// ── Init ──
 render();
 renderBandSelector();
 renderLevelView();
