@@ -287,22 +287,39 @@
       font-weight: 400;
     }
     .level-grid {
-      display: grid; grid-template-columns: repeat(6, 1fr);
-      gap: 5px; margin: 12px 0 10px;
+      display: flex; flex-direction: column;
+      gap: 4px; margin: 12px 0 10px;
     }
     .level-btn {
-      padding: 6px 3px;
+      padding: 9px 12px;
       border: 0.5px solid var(--border);
       border-radius: var(--radius-md);
       background: transparent;
       cursor: pointer;
-      font-size: 11px; color: var(--text-secondary);
-      font-family: 'Montserrat', inherit; font-weight: 500;
-      text-align: center; line-height: 1.4;
+      font-family: 'Montserrat', inherit;
+      text-align: left; line-height: 1.4;
       transition: all .15s;
+      display: flex; align-items: baseline; gap: 10px;
     }
-    .level-btn:hover { border-color: var(--brand); color: var(--brand-dark); background: var(--brand-bg); }
-    .level-btn.active { border-color: var(--brand); background: var(--brand-bg); color: var(--brand-dark); font-weight: 700; }
+    .level-btn:hover { border-color: var(--brand); background: var(--brand-bg); }
+    .level-btn:hover .level-btn-band { color: var(--brand-dark); }
+    .level-btn:hover .level-btn-label { color: var(--brand-dark); }
+    .level-btn.active { border-color: var(--brand); background: var(--brand-bg); }
+    .level-btn.active .level-btn-band { color: var(--brand-dark); font-weight: 800; }
+    .level-btn.active .level-btn-label { color: var(--brand-dark); font-weight: 600; }
+    .level-btn-band {
+      flex-shrink: 0; min-width: 26px;
+      font-size: 11.5px; font-weight: 700; color: var(--text-primary);
+    }
+    .level-btn-pts {
+      flex-shrink: 0;
+      font-size: 10.5px; font-weight: 500; color: var(--text-tertiary);
+      min-width: 44px;
+    }
+    .level-btn-label {
+      font-size: 12px; color: var(--text-secondary); font-weight: 400;
+      flex: 1;
+    }
 
     .guidance-panel { margin-top: 4px; }
     .guidance-section { margin-bottom: 10px; }
@@ -486,7 +503,7 @@
     }
 
     @media (max-width: 540px) {
-      .level-grid { grid-template-columns: repeat(3, 1fr); }
+      .level-btn-label { font-size: 11px; }
       .sc-factor-name { width: 120px; }
       .sticky-progress { display: none; }
       .je-method-grid { grid-template-columns: 1fr; }
@@ -984,7 +1001,7 @@ const BAND_RANGES = [
 
 let selections = {};
 let expanded = {};
-FACTORS.forEach(f => { selections[f.id] = null; expanded[f.id] = false; });
+FACTORS.forEach((f, i) => { selections[f.id] = null; expanded[f.id] = i === 0; });
 let radarChart = null;
 let summaryOpen = true;
 let activeTab = 'scorecard';
@@ -1136,7 +1153,9 @@ function renderFactors() {
       : `<div class="score-pill" style="background:var(--bg-secondary);color:var(--text-tertiary)">Not scored</div>`;
     const levelBtns = f.levels.map((l, li) =>
       `<button class="level-btn${sel===li?' active':''}" onclick="selectLevel('${f.id}',${li})">
-        <div>${l.band}</div><div style="opacity:.65">${l.pts}pts</div>
+        <span class="level-btn-band">${l.band}</span>
+        <span class="level-btn-pts">${l.pts} pts</span>
+        <span class="level-btn-label">${l.label}</span>
       </button>`).join('');
     const body = isOpen ? `<div class="factor-body">
       <p class="factor-definition">${f.definition}</p>
@@ -1169,7 +1188,7 @@ function render() { renderSummary(); renderFactors(); renderCTA(); updateStickyB
 function toggleExpand(id) { expanded[id] = !expanded[id]; render(); }
 function selectLevel(id, idx) { selections[id] = idx; expanded[id] = true; render(); }
 function resetAll() {
-  FACTORS.forEach(f => { selections[f.id] = null; expanded[f.id] = false; });
+  FACTORS.forEach((f, i) => { selections[f.id] = null; expanded[f.id] = i === 0; });
   if (radarChart) { radarChart.destroy(); radarChart = null; }
   render();
 }
